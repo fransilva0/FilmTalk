@@ -48,8 +48,8 @@
 
 ## :sparkles: Planejamento ##
 
-:heavy_check_mark: Sistema de Registro/login funcional;<br />
-:heavy_check_mark: Página inicial de postagens do forum;<br />
+- [ ] Sistema de Registro/login funcional;<br />
+- [ ] Página inicial de postagens do forum;<br />
 
 ## :memo: Licença ##
 
