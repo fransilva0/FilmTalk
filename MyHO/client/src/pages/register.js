@@ -1,8 +1,7 @@
 import React,{ useState }  from "react"
 import { HeaderLoginLogout } from "../components/Header"
-import { Input } from "../components/Input"
-import { DefaultButton } from "../components/Button"
 import styled from 'styled-components';
+import axios from 'axios';
 
 const FormSection = styled.section`
     display: flex;
@@ -19,7 +18,7 @@ const FormSection = styled.section`
 
 `;
 
-const InputStyled = styled.input`
+const Input = styled.input`
     color: #FFFFFF;
     border: 2px solid #9F9F9F;
     border-radius: 0.5rem;
@@ -57,7 +56,7 @@ const ButtonregisterStyled = styled(CommonStyling)`
     }
 `;
 
-const DefaultButtonStyled = styled(ButtonregisterStyled)`
+const Button = styled(ButtonregisterStyled)`
     color: #fff;
 
     &:hover {
@@ -65,37 +64,89 @@ const DefaultButtonStyled = styled(ButtonregisterStyled)`
       color: #fff;
     }
 `;
+
+const ErrorMensage = styled.p`
+    font-size: 1rem;
+    color: #fff;
+    background: #DF2222;
+    padding: 1rem;
+    margin-top: 1rem;
+
+`;
   
 export default function Register() {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [mensage, setMensage] = useState('');
+  const [email, setEmail] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(false);
+  const [message, setMessage] = useState('');
 
-  const CheckPassword = () => {
-    console.log(password)
-    console.log(repeatPassword)
-    if (password == repeatPassword) {
-      setMensage('As senhas são iguais!');
+
+  const CheckEmptyEntry = () => {
+    if (username.trim() === '' || email.trim() === '' || password.trim() === '' || repeatPassword.trim() === '') {
+      setMessage('existem campos vazios');
     } else {
-      setMensage('As senhas são diferentes!');
+      CheckPassword();
     }
   }
+
+  const CheckPassword = () => {
+    if (password == repeatPassword) {
+      CheckEmail();
+    } else {
+      setMessage('Os campos de senha precisam ser iguais');
+    }
+  }
+
+  const CheckEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(email);
+    setIsValidEmail(isValid);
+
+    if (isValidEmail) {
+      DataJSON();
+    } else {
+      setMessage('Por favor, insira um email válido.');
+    }
+
+  }
+
+  const DataJSON = () => {
+
+    const userDataJson = {
+      username: username,
+      email: email,
+      password: password
+    };
+
+    axios.post('URL_DO_BACKEND', userDataJson)
+      .then((response) => {
+        console.log('Dados do usuário enviados com sucesso:', response.data);
+        // Se necessário, faça algo com a resposta do backend aqui
+      })
+      .catch((error) => {
+        console.error('Erro ao enviar os dados do usuário:', error);
+      });
+
+  }
+
+  
 
   return (
     <>
       <HeaderLoginLogout />
       <FormSection>
         <h2>Registre-se</h2>
-        <InputStyled placeholder="user name" type="text" />
-        <InputStyled placeholder="E-mail" type="text" />
-        <InputStyled placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-        <InputStyled placeholder="repeat password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
+        <Input placeholder="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <Input placeholder="E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
+        <Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+        <Input placeholder="repeat password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
         <ButtonSection>
-          <DefaultButtonStyled type="submit" onClick={CheckPassword}>inscrever-se</DefaultButtonStyled>
+          <Button type="submit" onClick={CheckEmptyEntry}>inscrever-se</Button>
         </ButtonSection>
       </FormSection>
-      <p>{mensage}</p>
-
+      { message && <ErrorMensage>{message}</ErrorMensage>}
     </>
   )
 }
