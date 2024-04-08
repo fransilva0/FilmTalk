@@ -14,3 +14,10 @@ venv.bak/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Migrations
+MyHO/server/migrations/versions/13630dd627a0_initial_migration.py
+MyHO/server/migrations/script.py.mako
+MyHO/server/migrations/README
+MyHO/server/migrations/env.py
+MyHO/server/migrations/alembic.ini
