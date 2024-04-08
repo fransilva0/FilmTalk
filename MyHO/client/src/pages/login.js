@@ -1,7 +1,5 @@
-import React from "react"
+import React, {useState} from "react"
 import { HeaderLoginLogout } from "../components/Header"
-import { Input } from "../components/Input"
-import { DefaultButton } from "../components/Button"
 import styled from 'styled-components';
 
 const FormSection = styled.section`
@@ -19,25 +17,86 @@ const FormSection = styled.section`
 
 `;
 
+const Input = styled.input`
+    color: #FFFFFF;
+    border: 2px solid #9F9F9F;
+    border-radius: 0.5rem;
+    outline: 0;
+    background: #181818;
+    margin: 0.5rem 0 0.5rem 0;
+    padding: 0.5rem;
+
+`;
+
 const ButtonSection = styled.section`
 
     display: flex;
     justify-content: right;
 `;
 
+const CommonStyling = styled.button`
+    font-size: 1rem;
+    line-height: center;
+    padding: 0.5rem 2rem 0.5rem 2rem;
+    cursor: pointer;
+
+`;
+
+const ButtonregisterStyled = styled(CommonStyling)`
+    background: #DF2222;
+    border-radius: 0.5rem;
+    border: 4px solid #DF2222;
+    color: #000;
+    font-weight: bold;
+
+    &:hover {
+      background: transparent;
+      color: #fff;
+    }
+`;
+
+const Button = styled(ButtonregisterStyled)`
+    color: #fff;
+
+    &:hover {
+      background: transparent;
+      color: #fff;
+    }
+`;
+
+const ErrorMensage = styled.p`
+    font-size: 1rem;
+    color: #fff;
+    background: #DF2222;
+    padding: 1rem;
+    margin-top: 1rem;
+
+`;
+
 export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+
+
+  const CheckEmptyEntry = () => {
+    if (username.trim() === '' || password.trim() === '' ) {
+      setMessage('existem campos vazios');
+    }
+  }
+
   return (
     <>
       <HeaderLoginLogout />
       <FormSection>
         <h2>Login</h2>
-        <Input placeholder="user name" type="text" />
-        <Input placeholder="password" type="password" />
+        <Input placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <ButtonSection>
-          <DefaultButton text="entrar"/>
+          <Button type="submit" onClick={CheckEmptyEntry}>entrar</Button>
         </ButtonSection>
       </FormSection>
-
+      { message && <ErrorMensage>{message}</ErrorMensage>}
     </>
   )
 }
