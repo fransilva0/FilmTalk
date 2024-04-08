@@ -87,15 +87,17 @@ export default function Register() {
     if (username.trim() === '' || email.trim() === '' || password.trim() === '' || repeatPassword.trim() === '') {
       setMessage('existem campos vazios');
     } else {
+      setMessage('')
       CheckPassword();
     }
   }
 
   const CheckPassword = () => {
-    if (password == repeatPassword) {
+    if (password == repeatPassword && password.length >= 8 && password != username) {
+      setMessage('')
       CheckEmail();
     } else {
-      setMessage('Os campos de senha precisam ser iguais');
+      setMessage('Os campos de senha precisam ser iguais, terem no mínimo 8 caracteres e não serem iguais ao username');
     }
   }
 
@@ -105,6 +107,7 @@ export default function Register() {
     setIsValidEmail(isValid);
 
     if (isValidEmail) {
+      setMessage('')
       DataJSON();
     } else {
       setMessage('Por favor, insira um email válido.');
@@ -120,13 +123,17 @@ export default function Register() {
       password: password
     };
 
-    axios.post('URL_DO_BACKEND', userDataJson)
+    axios.post('http://127.0.0.1:8080/users', userDataJson)
       .then((response) => {
-        console.log('Dados do usuário enviados com sucesso:', response.data);
+        alert('Dados do usuário enviados com sucesso');
         // Se necessário, faça algo com a resposta do backend aqui
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setRepeatPassword('');
       })
       .catch((error) => {
-        console.error('Erro ao enviar os dados do usuário:', error);
+        console.log('Erro ao enviar os dados do usuário:', error);
       });
 
   }

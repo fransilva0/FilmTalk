@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
 import { MainHeader } from "../components/Header"
 import { SettingsScreen } from "../components/settingsScreen";
+import { UserPosts } from "../components/UserPosts";
 import { Icon } from '@iconify/react';
 
 const ProfileSection = styled.section`
@@ -67,7 +68,7 @@ export default function Profile() {
     let renderContent;
 
     if (Screen === 'PublicationsProfile') {
-        renderContent = <p>Tela de Publicações do Usuário</p>;
+        renderContent = <UserPosts/>;
     } else if (Screen === 'settings') {
       renderContent = <SettingsScreen/>;
     }
