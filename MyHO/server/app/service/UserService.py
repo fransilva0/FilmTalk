@@ -1,17 +1,51 @@
 from app.shared.validation_methods import validate_username,validate_email,validate_password
+from app.model.User import User
+from app.schemas.UserSchema import UserSchema
+from app.repository.UserRepository import UserRepository
 
+user = User(username=None,email=None,password=None)
+userSchema = UserSchema()
+userRepository = UserRepository()
 class UserService:
     
     def __init__(self) -> None:
         pass
+    
+    
+    def add_new_user(self,username,email,password):        
+
+        user.username = username
+        user.email = email
+        user.password = password
+
+        try:
+            userRepository.save(user)
+        except:
+            return 
+        
+        return userSchema.dump(user)
+    
+    def findUserById(self,id):
+        user = userRepository.getById(id=id)
+        return user
+    
+    def findUserByUsername(self,username):
+        user = userRepository.getByUsername(username=username)
+        return user
+    
+    def findUserByEmail(self,email):
+        user = userRepository.getByEmail(email=email)
+        return user
 
     def validate_new_user(self,username,email,password):
         response = None
-        try:
-            validate_username(username)
-            validate_email(email)
-            validate_password(password)
-        except:
-            return response
-        return response
+        validate_username(username)
+        validate_email(email)
+        validate_password(password)
+        if userRepository.getByUsername(username=username) != None:
+            raise RuntimeError("Esse Username já foi cadastrado")
+        elif userRepository.getByEmail(email=email) != None:
+            raise RuntimeError("Esse e-mail já foi cadastrado")
+        
+
 

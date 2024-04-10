@@ -4,7 +4,7 @@ def error_response(error_message, error_code,action,status=None):
     
     error_response = {
         "action" : action,
-        "message": error_message,
+        "error_message": error_message,
         "error_code": error_code,
         "status": "rejected" if status == None else status
     }

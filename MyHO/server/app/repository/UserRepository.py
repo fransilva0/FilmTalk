@@ -1,21 +1,18 @@
 from app.model.User import User
 from app.shared.baseRepository import BaseRepository
-from app.schemas.UserSchema import UserSchema
-
-userSchema = UserSchema()
+from app.shared.dataBase import db
 class UserRepository(BaseRepository):
     
 
     def __init__(self):
         super().__init__(User)
+    
+    def getByUsername(self,username):
+        user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
+        return user
+    def getByEmail(self,email):
+        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one()
+        return user
 
     
-    def add_new_user(self,username,email,password):        
-        user = User(
-            username = username,
-            email = email,
-            password = password
-        )
-        self.save(user)
-        
-        return userSchema.dump(user)
+

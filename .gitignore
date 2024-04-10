@@ -21,3 +21,4 @@ MyHO/server/migrations/script.py.mako
 MyHO/server/migrations/README
 MyHO/server/migrations/env.py
 MyHO/server/migrations/alembic.ini
+MyHO/server/migrations/versions/ed5e1e779a6f_initial_migration.py
