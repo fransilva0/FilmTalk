@@ -1,6 +1,7 @@
 from app.model.User import User
 from app.shared.baseRepository import BaseRepository
 from app.shared.dataBase import db
+
 class UserRepository(BaseRepository):
     
 
