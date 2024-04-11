@@ -124,7 +124,6 @@ export default function Register() {
     if (isValidEmail) {
       setMessage('')
       DataJSON();
-      router.push('/login');
     } else {
       setMessage('Por favor, insira um email válido.');
     }
@@ -145,14 +144,19 @@ export default function Register() {
         setEmail('');
         setPassword('');
         setRepeatPassword('');
+
+        router.push('/login');
+        
       })
       .catch((error) => {
-        if (error.error_response && error_response.error_code === 409) {
+        if ((error.response && error.response.status === 409)) {
 
-          setMessage(error.error_response.error_mensage)
+          setMessage(error.response.data.error_message)
 
         } else {
-        setMessage('Erro ao enviar os dados, tente novamente dentro de alguns minutos');
+
+          setMessage('Erro ao enviar os dados, tente novamente dentro de alguns minutos');
+
         }
       });
 
