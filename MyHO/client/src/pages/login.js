@@ -25,6 +25,11 @@ const Input = styled.input`
     background: #181818;
     margin: 0.5rem 0 0.5rem 0;
     padding: 0.5rem;
+    width: 100%;
+
+    @media (min-width: 1025px) {
+        width: 50rem;
+    }
 
 `;
 
@@ -32,6 +37,10 @@ const ButtonSection = styled.section`
 
     display: flex;
     justify-content: right;
+
+    @media (min-width: 1025px) {
+      width: 82rem;
+  }
 `;
 
 const CommonStyling = styled.button`
@@ -90,8 +99,8 @@ export default function Login() {
       <HeaderLoginLogout />
       <FormSection>
         <h2>Login</h2>
-        <Input placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div><Input placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+        <div><Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
         <ButtonSection>
           <Button type="submit" onClick={CheckEmptyEntry}>entrar</Button>
         </ButtonSection>

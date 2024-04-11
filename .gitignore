@@ -13,6 +13,9 @@ venv.bak/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+<<<<<<< HEAD
+*$py.class
+=======
 *$py.class
 
 # Migrations
@@ -22,3 +25,4 @@ MyHO/server/migrations/README
 MyHO/server/migrations/env.py
 MyHO/server/migrations/alembic.ini
 MyHO/server/migrations/versions/ed5e1e779a6f_initial_migration.py
+>>>>>>> 574da4e4bd4b7930fac1cc0667918fd3b6605892
