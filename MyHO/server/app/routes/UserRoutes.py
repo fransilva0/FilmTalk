@@ -1,29 +1,17 @@
-from flask import Blueprint,jsonify,request,abort
+from flask import Blueprint,jsonify,request,make_response
 from app.repository.UserRepository import UserRepository
-<<<<<<< HEAD
-=======
 from app.shared.responses import error_response,success_response
 from app.service.UserService import UserService
 from app.shared.exceptions_generic.ValidationError import ValidationError
->>>>>>> 574da4e4bd4b7930fac1cc0667918fd3b6605892
 
 user_bp = Blueprint('users_api',__name__,url_prefix='/users')
 userService = UserService()
 
-@user_bp.route("/",methods=("GET", "POST","PUT","DELETE"))
+@user_bp.route("",methods=("GET", "POST","PUT","DELETE"))
 def register():
-    response = "sucesso!"
     if request.method == "POST":
         if request.is_json:
             data = request.get_json()
-<<<<<<< HEAD
-            username = data.get("username")
-            email = data.get("email")
-            password = data.get("password")
-            userRepository = UserRepository()
-            userRepository.add_user(username=username,email=email,password=password)
-            return jsonify(response),200
-=======
             if len(data) < 3:
                 return make_response(error_response(action="Register",error_code=400,error_message="missing one or more parameters"))
             elif len(data) > 3:
@@ -44,4 +32,3 @@ def register():
                     return make_response(success_response(action="Register",parameter=response))
                             
     return error_response(action="Register",error_code=400,error_message="error")
->>>>>>> 574da4e4bd4b7930fac1cc0667918fd3b6605892

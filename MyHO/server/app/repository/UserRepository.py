@@ -1,28 +1,12 @@
 from app.model.User import User
 from app.shared.baseRepository import BaseRepository
-<<<<<<< HEAD
-
-
-=======
 from app.shared.dataBase import db
 
->>>>>>> 574da4e4bd4b7930fac1cc0667918fd3b6605892
 class UserRepository(BaseRepository):
+    
 
     def __init__(self):
         super().__init__(User)
-<<<<<<< HEAD
-    
-    def add_user(self,username,email,password):
-
-        user = User(
-            username = username,
-            email = email,
-            password = password
-        )
-        self.save(user)
-        return user,200
-=======
     
     def getByUsername(self,username):
         print("to aqui")
@@ -46,4 +30,3 @@ class UserRepository(BaseRepository):
 
     
 
->>>>>>> 574da4e4bd4b7930fac1cc0667918fd3b6605892
