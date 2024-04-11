@@ -2,6 +2,7 @@ from flask import Blueprint,jsonify,request,make_response
 from app.repository.UserRepository import UserRepository
 from app.shared.responses import error_response,success_response
 from app.service.UserService import UserService
+from app.shared.exceptions_generic.ValidationError import ValidationError
 
 user_bp = Blueprint('users_api',__name__,url_prefix='/users')
 userService = UserService()
@@ -23,9 +24,9 @@ def register():
                 password = data.get("password")
                 try:
                     userService.validate_new_user(username,email,password)
-                except Exception as e:
+                except Exception as err:
                     #TODO:aprender a manipular exeções para melhorar esse erro
-                    return make_response(error_response(action="Register",error_message=e.args[0],error_code=409))
+                    return make_response(error_response(action="Register",error_message=str(err),error_code=409))
                 else:
                     response = userService.add_new_user(username=username,email=email,password=password)
                     return make_response(success_response(action="Register",parameter=response))

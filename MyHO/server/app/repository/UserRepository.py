@@ -9,11 +9,24 @@ class UserRepository(BaseRepository):
         super().__init__(User)
     
     def getByUsername(self,username):
-        user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
-        return user
+        print("to aqui")
+        try:
+            user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
+        except:
+            #TODO: traceback runtime error
+            print("ocorreu uma exceçao")
+            return None
+        else:    
+            return user
     def getByEmail(self,email):
-        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one()
-        return user
+        try:
+            user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one()
+        except:
+            #TODO: traceback runtime error
+            print("ocorreu uma exceçao")
+            return None
+        else:
+            return user
 
     
 

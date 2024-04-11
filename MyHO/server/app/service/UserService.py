@@ -2,6 +2,7 @@ from app.shared.validation_methods import validate_username,validate_email,valid
 from app.model.User import User
 from app.schemas.UserSchema import UserSchema
 from app.repository.UserRepository import UserRepository
+from app.shared.exceptions_generic.ValidationError import ValidationError
 
 user = User(username=None,email=None,password=None)
 userSchema = UserSchema()
@@ -20,8 +21,9 @@ class UserService:
 
         try:
             userRepository.save(user)
-        except:
-            return 
+        except Exception as e:
+            #TODO: MELHORAR ESSA EXCECÃO
+            print(e.args)
         
         return userSchema.dump(user)
     
@@ -39,13 +41,15 @@ class UserService:
 
     def validate_new_user(self,username,email,password):
         response = None
+        if userRepository.getByUsername(username=username) != None:
+            raise Exception("Esse Username já foi cadastrado")
+        print("passa aqui?")
+        if userRepository.getByEmail(email=email) != None:
+            raise Exception("Esse e-mail já foi cadastrado")
         validate_username(username)
         validate_email(email)
         validate_password(password)
-        if userRepository.getByUsername(username=username) != None:
-            raise RuntimeError("Esse Username já foi cadastrado")
-        elif userRepository.getByEmail(email=email) != None:
-            raise RuntimeError("Esse e-mail já foi cadastrado")
+        return response
         
 
 
