@@ -19,6 +19,7 @@ const CommonStyling = styled.header`
 const HeaderHomeStyled = styled(CommonStyling)`
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `;
 
 const HeaderLoginLogoutStyled = styled(CommonStyling)`
@@ -45,6 +46,17 @@ export function HeaderLoginLogout() {
       <HeaderLoginLogoutStyled>
         <h1>MyHO</h1>
       </HeaderLoginLogoutStyled>
+    </>
+  )
+}
+
+export function MainHeader({children}) {
+  return (
+    <>
+      <HeaderHomeStyled>
+        <h1>MyHO</h1>
+        {children}
+      </HeaderHomeStyled>
     </>
   )
 }
