@@ -58,7 +58,7 @@ const ProfileFooter = styled.footer`
 `;
 
 
-export default function Profile() {
+export default function Home() {
     const [Screen, setScreen] = useState('PublicationsProfile');
 
     const ControlScreen = (dataScreen) => {

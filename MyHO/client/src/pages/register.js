@@ -1,4 +1,5 @@
-import React,{ useState }  from "react"
+import React,{ useState, useEffect }  from "react"
+import { useRouter } from 'next/router';
 import { HeaderLoginLogout } from "../components/Header"
 import styled from 'styled-components';
 import axios from 'axios';
@@ -26,6 +27,11 @@ const Input = styled.input`
     background: #181818;
     margin: 0.5rem 0 0.5rem 0;
     padding: 0.5rem;
+    width: 100%;
+
+    @media (min-width: 1025px) {
+      width: 50rem;
+  }
 
 `;
 
@@ -33,6 +39,10 @@ const ButtonSection = styled.section`
 
     display: flex;
     justify-content: right;
+
+    @media (min-width: 1025px) {
+      width: 82rem;
+  }
 `;
 
 const CommonStyling = styled.button`
@@ -82,6 +92,14 @@ export default function Register() {
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [message, setMessage] = useState('');
 
+  const router = useRouter();
+
+  useEffect(() => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(email);
+    setIsValidEmail(isValid);
+  }, [email]);
+
 
   const CheckEmptyEntry = () => {
     if (username.trim() === '' || email.trim() === '' || password.trim() === '' || repeatPassword.trim() === '') {
@@ -102,13 +120,11 @@ export default function Register() {
   }
 
   const CheckEmail = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValid = emailRegex.test(email);
-    setIsValidEmail(isValid);
 
     if (isValidEmail) {
       setMessage('')
       DataJSON();
+      router.push('/login');
     } else {
       setMessage('Por favor, insira um email válido.');
     }
@@ -125,15 +141,19 @@ export default function Register() {
 
     axios.post('http://127.0.0.1:8080/users', userDataJson)
       .then((response) => {
-        alert('Dados do usuário enviados com sucesso');
-        // Se necessário, faça algo com a resposta do backend aqui
         setUsername('');
         setEmail('');
         setPassword('');
         setRepeatPassword('');
       })
       .catch((error) => {
-        console.log('Erro ao enviar os dados do usuário:', error);
+        if (error.error_response && error_response.error_code === 409) {
+
+          setMessage(error.error_response.error_mensage)
+
+        } else {
+        setMessage('Erro ao enviar os dados, tente novamente dentro de alguns minutos');
+        }
       });
 
   }
@@ -145,10 +165,10 @@ export default function Register() {
       <HeaderLoginLogout />
       <FormSection>
         <h2>Registre-se</h2>
-        <Input placeholder="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <Input placeholder="E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
-        <Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-        <Input placeholder="repeat password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
+        <div><Input placeholder="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+        <div><Input placeholder="E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
+        <div><Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
+        <div><Input placeholder="repeat password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
         <ButtonSection>
           <Button type="submit" onClick={CheckEmptyEntry}>inscrever-se</Button>
         </ButtonSection>
