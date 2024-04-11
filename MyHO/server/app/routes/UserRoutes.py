@@ -2,7 +2,6 @@ from flask import Blueprint,jsonify,request,make_response
 from app.repository.UserRepository import UserRepository
 from app.shared.responses import error_response,success_response
 from app.service.UserService import UserService
-from app.shared.exceptions_generic.ValidationError import ValidationError
 
 user_bp = Blueprint('users_api',__name__,url_prefix='/users')
 userService = UserService()
@@ -23,12 +22,22 @@ def register():
                 email = data.get("email")
                 password = data.get("password")
                 try:
-                    userService.validate_new_user(username,email,password)
-                except Exception as err:
-                    #TODO:aprender a manipular exeções para melhorar esse erro
-                    return make_response(error_response(action="Register",error_message=str(err),error_code=409))
+                    userService.findUserByUsername(username=username)
+                except:
+                    pass
                 else:
+                    return make_response(error_response(action="Register",error_message="Esse Username já foi cadastrado!",error_code=409))
+                try:
+                    userService.findUserByEmail(email=email)
+                except:
+                    pass
+                else:                   
+                    return make_response(error_response(action="Register",error_message="Esse e-mail já foi cadastrado",error_code=409))
+                try:
+                    userService.validate_new_user(username,email,password) 
                     response = userService.add_new_user(username=username,email=email,password=password)
-                    return make_response(success_response(action="Register",parameter=response))
-                            
+                    return make_response(success_response(action="Register",parameter=response))           
+                except Exception as err:
+                    return make_response(error_response(action="Register",error_message=str(err),error_code=409))
+                                                        
     return error_response(action="Register",error_code=400,error_message="error")
