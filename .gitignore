@@ -13,16 +13,12 @@ venv.bak/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-<<<<<<< HEAD
-*$py.class
-=======
 *$py.class
 
 # Migrations
-MyHO/server/migrations/versions/13630dd627a0_initial_migration.py
-MyHO/server/migrations/script.py.mako
-MyHO/server/migrations/README
-MyHO/server/migrations/env.py
-MyHO/server/migrations/alembic.ini
-MyHO/server/migrations/versions/ed5e1e779a6f_initial_migration.py
->>>>>>> 574da4e4bd4b7930fac1cc0667918fd3b6605892
+server/migrations/versions/13630dd627a0_initial_migration.py
+server/migrations/script.py.mako
+server/migrations/README
+server/migrations/env.py
+server/migrations/alembic.ini
+server/migrations/versions/ed5e1e779a6f_initial_migration.py

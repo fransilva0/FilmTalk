@@ -31,7 +31,7 @@ export function HeaderHome() {
   return (
     <>
       <HeaderHomeStyled>
-        <h1>MyHO</h1>
+        <h1>FilmTalk</h1>
         <Link href="/login">
           <ButtonLogin />
         </Link>
@@ -44,7 +44,7 @@ export function HeaderLoginLogout() {
   return (
     <>
       <HeaderLoginLogoutStyled>
-        <h1>MyHO</h1>
+        <h1>FilmTalk</h1>
       </HeaderLoginLogoutStyled>
     </>
   )
@@ -54,7 +54,7 @@ export function MainHeader({children}) {
   return (
     <>
       <HeaderHomeStyled>
-        <h1>MyHO</h1>
+        <h1>FilmTalk</h1>
         {children}
       </HeaderHomeStyled>
     </>

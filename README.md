@@ -1,21 +1,21 @@
 <div align='center' id='top'>
-<img src='./.github/design.png' alt='MyHO, design' />
+<img src='./.github/design.png' alt='FilmTalk, design' />
 
 &#xa0;
 
 </div>
 
-<h1 align='center'>MyHO</h1>
+<h1 align='center'>FilmTalk</h1>
 
 <p align='center'>
 
-<img alt='Principal linguagem do projeto' src='https://img.shields.io/github/languages/top/fransilva0/MyHO?color=56BEB8'>
+<img alt='Principal linguagem do projeto' src='https://img.shields.io/github/languages/top/fransilva0/FilmTalk?color=56BEB8'>
 
-<img alt='Quantidade de linguagens utilizadas' src='https://img.shields.io/github/languages/count/fransilva0/MyHO?color=56BEB8'>
+<img alt='Quantidade de linguagens utilizadas' src='https://img.shields.io/github/languages/count/fransilva0/FilmTalk?color=56BEB8'>
 
-<img alt='Tamanho do repositório' src='https://img.shields.io/github/repo-size/fransilva0/MyHO?color=56BEB8'>
+<img alt='Tamanho do repositório' src='https://img.shields.io/github/repo-size/fransilva0/FilmTalk?color=56BEB8'>
 
-<img alt='Licença' src='https://img.shields.io/github/license/fransilva0/MyHO?color=56BEB8'>
+<img alt='Licença' src='https://img.shields.io/github/license/fransilva0/FilmTalk?color=56BEB8'>
 
 </p>
 
@@ -30,7 +30,7 @@
 ## :dart: Sobre ##
 
 <p>
-  O MyHO (my honest opinion) foi desenvolvido com o objetivo de criar um espaço online onde entusiastas de cinema podem se reunir, discutir seus filmes favoritos, recomendar novas descobertas e compartilhar insights.
+  O FilmTalk foi desenvolvido com o objetivo de criar um espaço online onde entusiastas de cinema podem se reunir, discutir seus filmes favoritos, recomendar novas descobertas e compartilhar insights.
 </p>
 
 <p>
