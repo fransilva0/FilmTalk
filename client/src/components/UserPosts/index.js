@@ -1,5 +1,14 @@
 import React,{ useState }  from "react"
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
+
+const GeneralDiv = styled.div`
+    @media (min-width: 1025px) {
+        display: flex;
+        justify-content: space-between;
+    }
+
+`;
 
 const FormSection = styled.section`
     display: flex;
@@ -61,7 +70,7 @@ const ButtonSection = styled.section`
     margin-top: 1rem;
 
     @media (min-width: 1025px) {
-        width: 82rem;
+        width: 50rem;
     }
 `;
 
@@ -105,6 +114,58 @@ const ErrorMensage = styled.p`
 
 `;
 
+const PublicationsSection = styled.section`
+
+    padding: 1rem;
+    padding-top: 4rem;
+
+    h2 {
+        border-bottom: 1px solid #DF2222;
+        color: #fff;
+        padding-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    @media (min-width: 1025px) {
+
+        width: 40%;
+        
+    }
+
+`;
+
+const Publication = styled.div`
+
+    background: #DF2222;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem; 
+    align-items: center;
+
+    button {
+        color: #fff;
+        font-size: 1.3rem;
+        background: transparent;
+        border: none;
+        text-align: left;
+        width: 40%;
+        cursor: pointer;
+    }
+
+    div {
+        display: flex;
+        color: #fff;
+        font-size: 0.8rem;
+        align-items: center;
+
+        p {
+            padding-right: 0.5rem;
+        }
+    }
+
+`;
+
 export function UserPosts () {
     const [title, setTitle] = useState('');
     const [post, setPost] = useState('');
@@ -119,16 +180,26 @@ export function UserPosts () {
       }
 
     return (
-        <>
+        <GeneralDiv>
             <FormSection>
                 <div><Input placeholder="Title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
                 <div><InputPost placeholder="Post" type="text" value={post} onChange={(e) => setPost(e.target.value)} /></div>
                 <ButtonSection>
                     <Button type="submit" onClick={CheckEmptyEntry}>Publicar uma postagem</Button>
                 </ButtonSection>
-                
+                { message && <ErrorMensage>{message}</ErrorMensage>}
             </FormSection>
-            { message && <ErrorMensage>{message}</ErrorMensage>}
-        </>
+
+            <PublicationsSection>
+                <h2>Minhas Postagens</h2>
+                <Publication>
+                    <button>Titulo da Postagem</button>
+                    <div>
+                        <p>0 comentário(s)</p>
+                        <Icon icon="tabler:message-circle-2" style={{ color: '#fff', fontSize: '3rem', margin: "0", padding: "0" }} />
+                    </div>
+                </Publication>
+            </PublicationsSection>
+        </GeneralDiv>
     )
 }
