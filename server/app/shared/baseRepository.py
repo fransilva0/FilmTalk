@@ -12,6 +12,11 @@ class BaseRepository:
 
 
     def getById(self,id):
-        object = db.get_or_404(self.model,id)
-        return object
+        try:
+            object = db.get_or_404(self.model,id)
+#TODO:teste de exceção
+        except:
+            raise Exception()
+        else:    
+            return object
         
