@@ -12,15 +12,16 @@ class UserRepository(BaseRepository):
         try:
             user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
         except:
-            raise Exception("User not found")
-        else:    
+            #TODO: melhorar o traceback runtime error dessa Exception
+            raise Exception("Usuário não encontrado ou não existe!",404)
+        else:  
             return user
     def getByEmail(self,email):
         try:
             user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one()
         except:
-            #TODO: traceback runtime error
-            raise Exception("User not found")
+            #TODO: melhorar o traceback runtime error dessa Exception
+            raise Exception("Usuário não encontrado ou não existe!",404)
         else:
             return user
 

@@ -2,6 +2,8 @@ from app.shared.validation_methods import validate_username,validate_email,valid
 from app.model.User import User
 from app.schemas.UserSchema import UserSchema
 from app.repository.UserRepository import UserRepository
+from app import bcrypt
+
 
 user = User(username=None,email=None,password=None)
 userSchema = UserSchema()
@@ -16,8 +18,9 @@ class UserService:
 
         user.username = username
         user.email = email
-        user.password = password
+        user.password =  bcrypt.generate_password_hash(password).decode("utf-8")
         userRepository.save(user)
+        user.pop("password")
         return userSchema.dump(user)
     
     def findUserById(self,id):
@@ -37,6 +40,10 @@ class UserService:
         validate_email(email)
         validate_password(password)
         pass
-        
-
-
+    def authenticate_user(self,username,password):
+        user = userRepository.getByUsername(username=username)
+        if not bcrypt.check_password_hash(user.password, password):
+            raise Exception("Usuário e/ou senha inválidos",404)
+        user = userSchema.dump(user)
+        user.pop("password")
+        return user
