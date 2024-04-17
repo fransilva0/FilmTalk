@@ -1,4 +1,5 @@
-import React,{ useState }  from "react"
+import React,{ useState }  from "react";
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
 const FormSection = styled.section`
@@ -90,6 +91,8 @@ export function SettingsScreen () {
     const [email, setEmail] = useState('');
     const [isValidEmail, setIsValidEmail] = useState(false);
     const [message, setMessage] = useState('');
+
+    const router = useRouter();
   
   
     const CheckEmptyEntry = () => {
@@ -121,8 +124,22 @@ export function SettingsScreen () {
   
     }
 
+    const handleLogout = () => {
+
+      localStorage.clear();
+      router.push('/login');
+    
+    };
+
+
     return (
         <>
+          <div>
+            <ButtonSection>
+              <Button type="submit" onClick={handleLogout}>logout</Button>
+            </ButtonSection>
+          </div>
+
         <FormSection>
             <div><Input placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
             <div><Input placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
