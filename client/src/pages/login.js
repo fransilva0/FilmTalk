@@ -1,6 +1,8 @@
-import React, {useState} from "react"
+import React, {useState} from "react";
+import { useRouter } from 'next/router';
 import { HeaderLoginLogout } from "../components/Header"
 import styled from 'styled-components';
+import axios from 'axios';
 
 const FormSection = styled.section`
     display: flex;
@@ -87,11 +89,48 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
+  const router = useRouter();
+
 
   const CheckEmptyEntry = () => {
     if (username.trim() === '' || password.trim() === '' ) {
       setMessage('existem campos vazios');
+    } else {
+      DataJSON();
     }
+  }
+
+  const DataJSON = () => {
+
+    const userDataJson = {
+      username: username,
+      password: password
+    };
+
+    axios.post('http://127.0.0.1:8080/users/login', userDataJson)
+      .then((response) => {
+        setUsername('');
+        setPassword('');
+
+        const userData = {
+          username: response.data.parameter.username,
+          email: response.data.parameter.email,
+          token: response.data.token,
+        };
+
+        localStorage.setItem('user', JSON.stringify(userData))
+
+        router.push('/home');
+        
+      })
+      .catch((error) => {
+        if ((error.response)) {
+
+          setMessage(error.response.data.error_message)
+
+        }
+      });
+
   }
 
   return (
