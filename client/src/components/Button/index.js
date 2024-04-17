@@ -13,10 +13,14 @@ const ButtonloginStyled = styled(CommonStyling)`
     border-radius: 0.5rem;
     border: 4px solid #040404;
     color: #FFF8F8;
+    transition: box-shadow 0.3s;
 
     &:hover {
-      background: transparent;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada no hover */
+    }
 
+    &:focus {
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2); /* Sombra mais suave quando focado */
     }
 `;
 
@@ -26,10 +30,11 @@ const ButtonregisterStyled = styled(CommonStyling)`
     border: 4px solid #DF2222;
     color: #000;
     font-weight: bold;
+    transition: background-color border-color 0.3s, color 0.3s;
 
     &:hover {
-      background: transparent;
-      color: #fff;
+        background-color: #c20000;
+        border-color: #c20000; 
     }
 `;
 

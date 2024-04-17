@@ -60,18 +60,16 @@ const ButtonregisterStyled = styled(CommonStyling)`
     color: #000;
     font-weight: bold;
 
-    &:hover {
-      background: transparent;
-      color: #fff;
-    }
 `;
 
 const Button = styled(ButtonregisterStyled)`
     color: #fff;
 
+    transition: background-color border-color 0.3s, color 0.3s;
+
     &:hover {
-      background: transparent;
-      color: #fff;
+        background-color: #c20000;
+        border-color: #c20000; 
     }
 `;
 

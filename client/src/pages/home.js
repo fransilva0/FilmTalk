@@ -1,4 +1,5 @@
-import React,{ useState }  from "react"
+import React,{ useState, useEffect }  from "react";
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
@@ -61,6 +62,11 @@ const ProfileFooter = styled.footer`
 export default function Home() {
     const [Screen, setScreen] = useState('PublicationsProfile');
 
+    const [user, setUser] = useState();
+
+    const router = useRouter();
+
+
     const ControlScreen = (dataScreen) => {
         setScreen(dataScreen)
     }
@@ -73,13 +79,37 @@ export default function Home() {
       renderContent = <SettingsScreen/>;
     }
 
+    useEffect(() => {
+
+        const loggedInUser = localStorage.getItem("user");
+
+        if (loggedInUser) {
+
+          const foundUser = JSON.parse(loggedInUser);
+
+          setUser(foundUser);
+
+        } else {
+            
+            router.push('/login');
+            
+          }
+      }, []);
+
+    if (!user) {
+
+        return null;
+
+    }
+
+
     return (
         <>
             <MainHeader>
 
                 <ProfileSection>
                     <div>
-                        <p>Username</p>
+                        <p>{user && user.username}</p>
                         <p>0 posts</p>
                     </div>
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
