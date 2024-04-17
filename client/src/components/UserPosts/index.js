@@ -1,6 +1,7 @@
 import React,{ useState }  from "react"
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import { useRouter } from 'next/router';
 
 const GeneralDiv = styled.div`
     @media (min-width: 1025px) {
@@ -51,6 +52,7 @@ const InputPost = styled.textarea`
     padding: 0.5rem;
     width: 100%;
     height: 10rem;
+    resize: none;
 
     &::placeholder {
         position: absolute;
@@ -97,10 +99,11 @@ const ButtonregisterStyled = styled(CommonStyling)`
 
 const Button = styled(ButtonregisterStyled)`
     color: #fff;
+    transition: background-color border-color 0.3s, color 0.3s;
 
     &:hover {
-      background: transparent;
-      color: #fff;
+        background-color: #c20000;
+        border-color: #c20000; 
     }
 
 `;
@@ -171,6 +174,8 @@ export function UserPosts () {
     const [post, setPost] = useState('');
     const [message, setMessage] = useState('');
 
+    const router = useRouter()
+
     const CheckEmptyEntry = () => {
         if (title.trim() === '' || post.trim() === '') {
           setMessage('existem campos vazios');
@@ -193,7 +198,9 @@ export function UserPosts () {
             <PublicationsSection>
                 <h2>Minhas Postagens</h2>
                 <Publication>
-                    <button>Titulo da Postagem</button>
+                    <button onClick={() => {
+                        router.push(`/postPreview`)
+                      }}>Titulo da Postagem</button>
                     <div>
                         <p>0 comentário(s)</p>
                         <Icon icon="tabler:message-circle-2" style={{ color: '#fff', fontSize: '3rem', margin: "0", padding: "0" }} />

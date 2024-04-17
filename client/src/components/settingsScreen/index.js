@@ -24,6 +24,11 @@ const Input = styled.input`
     background: #181818;
     margin: 0.5rem 0 0.5rem 0;
     padding: 0.5rem;
+    width: 100%;
+
+    @media (min-width: 1025px) {
+        width: 50rem;
+    }
 
 `;
 
@@ -31,6 +36,10 @@ const ButtonSection = styled.section`
 
     display: flex;
     justify-content: right;
+
+    @media (min-width: 1025px) {
+      width: 82rem;
+  }
 `;
 
 const CommonStyling = styled.button`
@@ -56,10 +65,11 @@ const ButtonregisterStyled = styled(CommonStyling)`
 
 const Button = styled(ButtonregisterStyled)`
     color: #fff;
+    transition: background-color border-color 0.3s, color 0.3s;
 
     &:hover {
-      background: transparent;
-      color: #fff;
+        background-color: #c20000;
+        border-color: #c20000; 
     }
 `;
 
@@ -114,10 +124,10 @@ export function SettingsScreen () {
     return (
         <>
         <FormSection>
-            <Input placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <Input placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/>
-            <Input placeholder="new password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-            <Input placeholder="confirm new password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
+            <div><Input placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+            <div><Input placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
+            <div><Input placeholder="new password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
+            <div><Input placeholder="confirm new password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
             <ButtonSection>
                 <Button type="submit" onClick={CheckEmptyEntry}>salvar</Button>
             </ButtonSection>
