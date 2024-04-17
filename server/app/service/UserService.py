@@ -14,14 +14,12 @@ class UserService:
         pass
     
     
-    def add_new_user(self,username,email,password):        
-
-        user.username = username
-        user.email = email
-        user.password =  bcrypt.generate_password_hash(password).decode("utf-8")
-        userRepository.save(user)
-        user.pop("password")
-        return userSchema.dump(user)
+    def add_new_user(self,username,email,password):
+        user.username = username         
+        user.email = email         
+        user.password =  bcrypt.generate_password_hash(password).decode("utf-8")         
+        userRepository.save(user)         
+        return
     
     def findUserById(self,id):
         user = userRepository.getById(id=id)
@@ -43,7 +41,8 @@ class UserService:
     def authenticate_user(self,username,password):
         user = userRepository.getByUsername(username=username)
         if not bcrypt.check_password_hash(user.password, password):
-            raise Exception("Usuário e/ou senha inválidos",404)
+            raise Exception("Usuário e/ou senha inválidos",401)
         user = userSchema.dump(user)
         user.pop("password")
         return user
+    
