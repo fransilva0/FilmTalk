@@ -7,7 +7,7 @@ import jwt
 user_bp = Blueprint('users_api',__name__,url_prefix='/users')
 userService = UserService()
 
-@user_bp.route("",methods=("GET", "POST","PUT","DELETE"))
+@user_bp.route("",methods=("GET", "POST","PUT"))
 def register():
     if request.method == "POST":
         if request.is_json:
@@ -39,9 +39,14 @@ def register():
                     userService.add_new_user(username=username,email=email,password=password)
                     return make_response(success_response(action="Register"))           
                 except Exception as err:
-                    return make_response(error_response(action="Register",error_message=str(err),error_code=409))
+                    if len(err.args) == 2:
+                        return make_response(error_response(action="Register",error_message=err.args[0],error_code=err.args[1]))
+                    else:
+                        return make_response(error_response(action="Register",error_message=str(err),error_code=500))
+        else:
+            #TODO:arrumar esse bad request                                                                                
+            return make_response(error_response(action="Register",error_message="Bad Request",error_code=400))
                                                         
-        return error_response(action="Register",error_code=400,error_message="BadRequestError")
 
 @user_bp.route("/login", methods=["POST"])
 def login():
@@ -64,5 +69,6 @@ def login():
                 return make_response(error_response(action="Authenticate",error_message=err.args[0],error_code=err.args[1]))
            else:
                 return error_response(action="Authenticate",error_code=500,error_message=err.args)
-    elif not request.json:
+    else:
+        #TODO:arrumar esse bad request   
         return error_response(action="Authenticate",error_code=400,error_message="Bad Request")
