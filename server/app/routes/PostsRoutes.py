@@ -23,7 +23,7 @@ def publication(current_user):
                 try:
                     title = data.get("title")
                     publication = data.get("publication")
-                    postsService.add_new_user_post(title=title,publication=publication,user_id=current_user.id)
+                    postsService.add_new_publication(title=title,publication=publication,user_id=current_user.id)
                     return make_response(success_response(action="Publication"))
                 except Exception as err:
                     if len(err.args) == 2:
@@ -33,6 +33,16 @@ def publication(current_user):
         else:
         #TODO:arrumar esse bad request                                                                                
             return make_response(error_response(action="Publication",error_message="Bad Request",error_code=400))
-                    
+    elif request.method == "GET":
+
+        user_id = current_user.id
+        try:
+            publications = postsService.findAllPublicationByUserId(user_id)
+            return make_response(success_response(action="Publication",parameter=publications))
+        except Exception as err:
+            if len(err.args) == 2:
+                return make_response(error_response(action="Publication",error_message=err.args[0],error_code=err.args[1]))
+            else:
+                return make_response(error_response(action="Publication",error_message=str(err),error_code=500))
             
                       

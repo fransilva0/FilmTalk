@@ -63,6 +63,7 @@ def login():
         try:
             user = userService.authenticate_user(username=username,password=password)
             token = jwt.encode({"id": user["id"]},current_app.config["SECRET_KEY"],algorithm="HS256")
+            user.pop("id")
             return  make_response(success_response(action="Authenticate",token=token, parameter=user))        
         except Exception as err:
            if len(err.args) == 2:

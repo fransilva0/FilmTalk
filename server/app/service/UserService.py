@@ -48,5 +48,6 @@ class UserService:
             raise Exception("Usuário e/ou senha inválidos",401)
         user = userSchema.dump(user)
         user.pop("password")
+        user.pop("posts")
         return user
 
