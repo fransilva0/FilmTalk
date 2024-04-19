@@ -21,5 +21,7 @@ def create_app():
 
     from app.routes.UserRoutes import user_bp
     app.register_blueprint(user_bp)
+    from app.routes.PostsRoutes import posts_bp
+    app.register_blueprint(posts_bp)
     
     return app
