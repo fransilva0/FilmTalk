@@ -14,7 +14,7 @@ class BaseRepository:
     def getById(self,id):
         try:
             object = db.get_or_404(self.model,id)
-#TODO:teste de exceção
+#TODO:testar se essa funcao lança uma excecao
         except:
             raise Exception()
         else:    

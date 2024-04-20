@@ -20,6 +20,7 @@ class UserService:
         user.password =  bcrypt.generate_password_hash(password).decode("utf-8")         
         userRepository.save(user)         
         return
+
     
     def findUserById(self,id):
         user = userRepository.getById(id=id)
@@ -38,11 +39,15 @@ class UserService:
         validate_email(email)
         validate_password(password)
         pass
+        
+
+
     def authenticate_user(self,username,password):
         user = userRepository.getByUsername(username=username)
         if not bcrypt.check_password_hash(user.password, password):
             raise Exception("Usuário e/ou senha inválidos",401)
         user = userSchema.dump(user)
         user.pop("password")
+        user.pop("posts")
         return user
-    
+
