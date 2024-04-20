@@ -171,13 +171,13 @@ const Publication = styled.div`
 
 export function UserPosts () {
     const [title, setTitle] = useState('');
-    const [post, setPost] = useState('');
+    const [publication, setPublication] = useState('');
     const [message, setMessage] = useState('');
 
     const router = useRouter()
 
     const CheckEmptyEntry = () => {
-        if (title.trim() === '' || post.trim() === '') {
+        if (title.trim() === '' || publication.trim() === '') {
           setMessage('existem campos vazios');
         } else {
             setMessage('')
@@ -188,7 +188,7 @@ export function UserPosts () {
         <GeneralDiv>
             <FormSection>
                 <div><Input placeholder="Title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-                <div><InputPost placeholder="Post" type="text" value={post} onChange={(e) => setPost(e.target.value)} /></div>
+                <div><InputPost placeholder="Post" type="text" value={publication} onChange={(e) => setPublication(e.target.value)} /></div>
                 <ButtonSection>
                     <Button type="submit" onClick={CheckEmptyEntry}>Publicar uma postagem</Button>
                 </ButtonSection>

@@ -1,6 +1,7 @@
 import React,{ useState }  from "react";
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 
 const FormSection = styled.section`
     display: flex;
@@ -74,6 +75,22 @@ const Button = styled(ButtonregisterStyled)`
     }
 `;
 
+const ButtonIcon = styled.button`
+    color: #fff;
+    background: transparent;
+    border: none;
+    margin: 2rem 2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    @media (min-width: 1025px) {
+      margin: 2rem 0 0;
+  }
+
+`;
+
 const ErrorMensage = styled.p`
     font-size: 1rem;
     color: #fff;
@@ -136,7 +153,10 @@ export function SettingsScreen () {
         <>
           <div>
             <ButtonSection>
-              <Button type="submit" onClick={handleLogout}>logout</Button>
+              <ButtonIcon type="submit" onClick={handleLogout}>
+                <div><Icon icon="uiw:login" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} /></div>
+                <div>logout</div>
+              </ButtonIcon>
             </ButtonSection>
           </div>
 

@@ -1,4 +1,6 @@
-import React,{ useState }  from "react"
+import React,{ useState, useEffect }  from "react";
+import { useRouter } from 'next/router';
+import Modal from 'react-modal';
 import Image from 'next/image';
 import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
@@ -160,10 +162,61 @@ const PostSettings = styled.div`
 
 `;
 
+const DeletePostPopup = styled.section`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    height: 100%; 
+    margin: auto;
+
+    h2 {
+        text-align: center;
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+
+        button {
+            color: #fff;
+            background: transparent;
+            border: none;
+            margin: 2rem 2rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+
+            @media (min-width: 1025px) {
+                margin: 2rem 0 0;
+            }
+        }
+    }
+
+    @media (min-width: 370px) and (max-width: 768px) {
+        
+        h2 {
+            font-size: 1rem;
+        }
+
+        div {
+            flex-direction: column;
+        }
+    }
+
+`;
+
 export default function PostPreview() {
 
     const [comment, setComment] = useState('');
     const [message, setMessage] = useState('');
+    const [user, setUser] = useState();
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
+    const router = useRouter();
 
     const CheckEmptyEntry = () => {
         if (comment.trim() === '') {
@@ -173,19 +226,99 @@ export default function PostPreview() {
         }
       }
 
+      const openModal = () => {
+        setModalIsOpen(true);
+      }
+
+      const closeModal = () => {
+        setModalIsOpen(false);
+      }
+      
+      const handleConfirm = () => {
+       
+        console.log("lógica de enviar os dados pro back aqui")
+
+        closeModal(); 
+      }
+
+      useEffect(() => {
+
+        const loggedInUser = localStorage.getItem("user");
+
+        if (loggedInUser) {
+
+          const foundUser = JSON.parse(loggedInUser);
+
+          setUser(foundUser);
+
+        } else {
+            
+            router.push('/login');
+            
+          }
+      }, []);
+
+      if (!user) {
+
+        return null;
+
+    }
+      
+
     return (
         <>
             <MainHeader>
 
                 <ProfileSection>
                     <div>
-                        <p>Username</p>
+                        <p>{user && user.username}</p>
                         <p>0 posts</p>
                     </div>
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
                 </ProfileSection>
 
             </MainHeader>
+
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Confirmação de exclusão" 
+                style={{
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)'
+                    },
+                    content: {
+                        width: '50%', 
+                        height: '50%', 
+                        margin: 'auto',
+                        backgroundColor: '#181818', 
+                        color: '#fff',
+                        border: 'none'
+                    
+                    }
+            }}>
+
+                <DeletePostPopup>
+                    <h2>Tem certeza que deseja excluir esta publicação?</h2>
+                    <div>
+                        <Button onClick={handleConfirm}>
+                            <div>
+                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                            </div>
+                            <div>
+                                Confirmar
+                            </div>
+                        </Button>
+                        <Button onClick={closeModal}>
+                            <div>
+                                <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                            </div>
+                            <div>
+                                Cancelar
+                            </div>
+                        </Button>
+                    </div>
+                    
+                </DeletePostPopup>
+
+            </Modal>
 
             <Section>
 
@@ -204,7 +337,7 @@ export default function PostPreview() {
                         <button>
                             <Icon icon="tabler:edit" style={{ color: '#fff', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
                         </button>
-                        <button>
+                        <button onClick={openModal}>
                             <Icon icon="fluent:delete-16-filled" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
                         </button>
                     </PostSettings>
