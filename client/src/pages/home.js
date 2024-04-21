@@ -74,7 +74,7 @@ export default function Home() {
     let renderContent;
 
     if (Screen === 'PublicationsProfile') {
-        renderContent = <UserPosts/>;
+        renderContent = <UserPosts userProp={user} setUserProp={setUser}/>;
     } else if (Screen === 'settings') {
       renderContent = <SettingsScreen/>;
     }

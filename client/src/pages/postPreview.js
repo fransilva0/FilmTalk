@@ -1,4 +1,7 @@
-import React,{ useState }  from "react"
+import React,{ useState, useEffect }  from "react";
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import Modal from 'react-modal';
 import Image from 'next/image';
 import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
@@ -160,10 +163,66 @@ const PostSettings = styled.div`
 
 `;
 
+const DeletePostPopup = styled.section`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    height: 100%; 
+    margin: auto;
+
+    h2 {
+        text-align: center;
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+
+        button {
+            color: #fff;
+            background: transparent;
+            border: none;
+            margin: 2rem 2rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+
+            @media (min-width: 1025px) {
+                margin: 2rem 0 0;
+            }
+        }
+    }
+
+    @media (min-width: 370px) and (max-width: 768px) {
+        
+        h2 {
+            font-size: 1rem;
+        }
+
+        div {
+            flex-direction: column;
+        }
+    }
+
+`;
+
 export default function PostPreview() {
 
     const [comment, setComment] = useState('');
     const [message, setMessage] = useState('');
+    const [user, setUser] = useState();
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [listPublications, setListPublications] = useState([]);
+    const [checkPublication, setCheckPublication] = useState(true);
+
+
+    const router = useRouter();
+
+    const { UserPost } = router.query
+    const post = listPublications.find(publication => publication.id == UserPost);
 
     const CheckEmptyEntry = () => {
         if (comment.trim() === '') {
@@ -173,13 +232,74 @@ export default function PostPreview() {
         }
       }
 
+      const openModal = () => {
+        setModalIsOpen(true);
+      }
+
+      const closeModal = () => {
+        setModalIsOpen(false);
+      }
+      
+      const handleConfirm = () => {
+       
+        console.log("lógica de enviar os dados pro back aqui")
+
+        closeModal(); 
+      }
+
+      const CheckPublications = (access_token) => {
+
+        axios.get('http://127.0.0.1:8080/posts', {
+            headers: {
+              'Authorization': `Bearer ${access_token}`
+            }
+          })
+        .then(response => {
+
+            setListPublications(response.data.requested_data);
+
+         })
+      .catch(error => {
+
+        console.log(error.response.data.error_message)
+
+      });
+    }
+
+      useEffect(() => {
+
+        const loggedInUser = localStorage.getItem("user");
+
+        if (loggedInUser) {
+
+          const foundUser = JSON.parse(loggedInUser);
+
+          setUser(foundUser);
+          CheckPublications(foundUser.token);
+          
+
+        } else {
+            
+            router.push('/login');
+            
+          }
+          
+      }, []);
+      
+
+      if (!user) {
+
+        return null;
+    }
+      
+    if (post) {
     return (
         <>
             <MainHeader>
 
                 <ProfileSection>
                     <div>
-                        <p>Username</p>
+                        <p>{user && user.username}</p>
                         <p>0 posts</p>
                     </div>
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
@@ -187,24 +307,59 @@ export default function PostPreview() {
 
             </MainHeader>
 
-            <Section>
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Confirmação de exclusão" 
+                style={{
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)'
+                    },
+                    content: {
+                        width: '50%', 
+                        height: '50%', 
+                        margin: 'auto',
+                        backgroundColor: '#181818', 
+                        color: '#fff',
+                        border: 'none'
+                    
+                    }
+            }}>
 
+                <DeletePostPopup>
+                    <h2>Tem certeza que deseja excluir esta publicação?</h2>
+                    <div>
+                        <Button onClick={handleConfirm}>
+                            <div>
+                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                            </div>
+                            <div>
+                                Confirmar
+                            </div>
+                        </Button>
+                        <Button onClick={closeModal}>
+                            <div>
+                                <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                            </div>
+                            <div>
+                                Cancelar
+                            </div>
+                        </Button>
+                    </div>
+                    
+                </DeletePostPopup>
+
+            </Modal>
+            <Section>
+                <>
                 <div>
 
-                    <TitlePost>Título da Postagem</TitlePost>
+                    <TitlePost>{post.title}</TitlePost>
 
-                    <TextPost>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                    </TextPost>
+                    <TextPost>{post.publication}</TextPost>
 
                     <PostSettings>
                         <button>
                             <Icon icon="tabler:edit" style={{ color: '#fff', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
                         </button>
-                        <button>
+                        <button onClick={openModal}>
                             <Icon icon="fluent:delete-16-filled" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
                         </button>
                     </PostSettings>
@@ -229,11 +384,26 @@ export default function PostPreview() {
                     <TitleComments>Comentários</TitleComments>
 
                 </div>
+            </>     
             </Section>
 
-
-
         </>
-    )
+    ) } else {
+        console.log(user)
+        return (
+            <MainHeader>
+
+                <ProfileSection>
+                    <div>
+                        <p>{user && user.username}</p>
+                        <p>0 posts</p>
+                    </div>
+                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
+                </ProfileSection>
+
+            </MainHeader>
+
+        )
+    }
     
 }
