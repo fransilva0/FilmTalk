@@ -1,5 +1,6 @@
 import React,{ useState, useEffect }  from "react";
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import Modal from 'react-modal';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -213,10 +214,15 @@ export default function PostPreview() {
     const [comment, setComment] = useState('');
     const [message, setMessage] = useState('');
     const [user, setUser] = useState();
-
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [listPublications, setListPublications] = useState([]);
+    const [checkPublication, setCheckPublication] = useState(true);
+
 
     const router = useRouter();
+
+    const { UserPost } = router.query
+    const post = listPublications.find(publication => publication.id == UserPost);
 
     const CheckEmptyEntry = () => {
         if (comment.trim() === '') {
@@ -241,6 +247,25 @@ export default function PostPreview() {
         closeModal(); 
       }
 
+      const CheckPublications = (access_token) => {
+
+        axios.get('http://127.0.0.1:8080/posts', {
+            headers: {
+              'Authorization': `Bearer ${access_token}`
+            }
+          })
+        .then(response => {
+
+            setListPublications(response.data.requested_data);
+
+         })
+      .catch(error => {
+
+        console.log(error.response.data.error_message)
+
+      });
+    }
+
       useEffect(() => {
 
         const loggedInUser = localStorage.getItem("user");
@@ -250,21 +275,24 @@ export default function PostPreview() {
           const foundUser = JSON.parse(loggedInUser);
 
           setUser(foundUser);
+          CheckPublications(foundUser.token);
+          
 
         } else {
             
             router.push('/login');
             
           }
+          
       }, []);
+      
 
       if (!user) {
 
         return null;
-
     }
       
-
+    if (post) {
     return (
         <>
             <MainHeader>
@@ -319,19 +347,13 @@ export default function PostPreview() {
                 </DeletePostPopup>
 
             </Modal>
-
             <Section>
-
+                <>
                 <div>
 
-                    <TitlePost>Título da Postagem</TitlePost>
+                    <TitlePost>{post.title}</TitlePost>
 
-                    <TextPost>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique ullamcorper felis, sed congue lacus vestibulum pellentesque.
-                    </TextPost>
+                    <TextPost>{post.publication}</TextPost>
 
                     <PostSettings>
                         <button>
@@ -362,11 +384,26 @@ export default function PostPreview() {
                     <TitleComments>Comentários</TitleComments>
 
                 </div>
+            </>     
             </Section>
 
-
-
         </>
-    )
+    ) } else {
+        console.log(user)
+        return (
+            <MainHeader>
+
+                <ProfileSection>
+                    <div>
+                        <p>{user && user.username}</p>
+                        <p>0 posts</p>
+                    </div>
+                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
+                </ProfileSection>
+
+            </MainHeader>
+
+        )
+    }
     
 }

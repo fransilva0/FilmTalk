@@ -114,8 +114,8 @@ export default function Login() {
         setPassword('');
 
         const userData = {
-          username: response.data.parameter.username,
-          email: response.data.parameter.email,
+          username: response.data.requested_data.username,
+          email: response.data.requested_data.email,
           token: response.data.token,
         };
 
