@@ -110,7 +110,6 @@ export default function Home() {
                 <ProfileSection>
                     <div>
                         <p>{user && user.username}</p>
-                        <p>0 posts</p>
                     </div>
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
                 </ProfileSection>
