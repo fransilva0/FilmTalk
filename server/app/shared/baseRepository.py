@@ -22,6 +22,7 @@ class BaseRepository:
         try:
             object = db.get_or_404(self.model,id)
 #TODO:tratamento de exeção para ser feito
+
         except:
             raise Exception()
         else:    

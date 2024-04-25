@@ -1,7 +1,8 @@
-import React,{ useState }  from "react"
+import React,{ useState, useEffect }  from "react"
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const GeneralDiv = styled.div`
     @media (min-width: 1025px) {
@@ -14,7 +15,6 @@ const GeneralDiv = styled.div`
 const FormSection = styled.section`
     display: flex;
     flex-direction: column;
-    justify-content: center;
     text-align: center;
     margin: 4rem 2rem 0 2rem;
 
@@ -169,26 +169,85 @@ const Publication = styled.div`
 
 `;
 
-export function UserPosts () {
+export function UserPosts ({ userProp, setUserProp }) {
     const [title, setTitle] = useState('');
-    const [post, setPost] = useState('');
+    const [publication, setPublication] = useState('');
     const [message, setMessage] = useState('');
+    const [user, setUser] = useState();
+    const [listPublications, setListPublications] = useState([]);
 
     const router = useRouter()
 
+    const access_token = userProp && userProp.token
+
+    useEffect(() => {
+        
+        CheckPublications()
+
+      }, []);
+
+    const CheckPublications = () => {
+
+        axios.get('http://127.0.0.1:8080/posts', {
+            headers: {
+              'Authorization': `Bearer ${access_token}`
+            }
+          })
+        .then(response => {
+
+            setListPublications(response.data.requested_data);
+
+         })
+      .catch(error => {
+
+        console.log(error.response.data.error_message)
+
+      });
+
+    }
+
     const CheckEmptyEntry = () => {
-        if (title.trim() === '' || post.trim() === '') {
+        if (title.trim() === '' || publication.trim() === '') {
           setMessage('existem campos vazios');
         } else {
             setMessage('')
+            DataJSON()
         }
+      }
+
+      const DataJSON = () => {
+
+        const userDataJson = {
+          title: title,
+          publication: publication
+        };
+    
+        axios.post('http://127.0.0.1:8080/posts', userDataJson, {
+            headers: {
+              'Authorization': `Bearer ${access_token}`
+            }
+          })
+          .then((response) => {
+            setTitle('');
+            setPublication('');
+            CheckPublications();
+            
+          })
+          .catch((error) => {
+            if ((error.response)) {
+    
+              setMessage(error.response.data.error_message)
+    
+            }
+          });
+    
       }
 
     return (
         <GeneralDiv>
             <FormSection>
                 <div><Input placeholder="Title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-                <div><InputPost placeholder="Post" type="text" value={post} onChange={(e) => setPost(e.target.value)} /></div>
+                <div><InputPost placeholder="Post" type="text" value={publication} onChange={(e) => setPublication(e.target.value)} /></div>
                 <ButtonSection>
                     <Button type="submit" onClick={CheckEmptyEntry}>Publicar uma postagem</Button>
                 </ButtonSection>
@@ -197,15 +256,21 @@ export function UserPosts () {
 
             <PublicationsSection>
                 <h2>Minhas Postagens</h2>
-                <Publication>
+
+                {listPublications && listPublications.map(publication => (
+                <Publication key={publication.id}>
+
                     <button onClick={() => {
-                        router.push(`/postPreview`)
-                      }}>Titulo da Postagem</button>
+                        router.push(`/postPreview?UserPost=${publication.id}`)
+                      }}>{publication.title}</button>
+
                     <div>
                         <p>0 comentário(s)</p>
                         <Icon icon="tabler:message-circle-2" style={{ color: '#fff', fontSize: '3rem', margin: "0", padding: "0" }} />
                     </div>
-                </Publication>
+
+                </Publication>))}
+
             </PublicationsSection>
         </GeneralDiv>
     )

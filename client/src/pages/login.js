@@ -68,10 +68,11 @@ const ButtonregisterStyled = styled(CommonStyling)`
 
 const Button = styled(ButtonregisterStyled)`
     color: #fff;
+    transition: background-color border-color 0.3s, color 0.3s;
 
     &:hover {
-      background: transparent;
-      color: #fff;
+        background-color: #c20000;
+        border-color: #c20000; 
     }
 `;
 
@@ -113,8 +114,8 @@ export default function Login() {
         setPassword('');
 
         const userData = {
-          username: response.data.parameter.username,
-          email: response.data.parameter.email,
+          username: response.data.requested_data.username,
+          email: response.data.requested_data.email,
           token: response.data.token,
         };
 

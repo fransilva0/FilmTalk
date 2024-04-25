@@ -11,7 +11,7 @@ class PostsService:
     def __init__(self) -> None:
         pass
 
-    def add_new_publication(self,title,publication,user_id):
+    def add_new_publication(self,title,publication,user_id):      
         post = Posts(title=None,publication=None,user_id=None)
         post.title = title
         post.publication = publication
@@ -38,6 +38,7 @@ class PostsService:
         
     def findPublicationById(self,id):
         ...
+        
     def findAllPublicationByUserId(self,user_id):
         publications = postsRepository.getAllByUserId(user_id)
         response = postsSchema.dump(publications,many=True)
@@ -45,4 +46,5 @@ class PostsService:
             for  publication in response:
                 publication.pop("user_id")
         return response
-    
+
+
