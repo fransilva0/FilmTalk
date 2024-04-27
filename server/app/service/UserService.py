@@ -5,7 +5,6 @@ from app.repository.UserRepository import UserRepository
 from app import bcrypt
 
 
-user = User(username=None,email=None,password=None)
 userSchema = UserSchema()
 userRepository = UserRepository()
 class UserService:
@@ -15,6 +14,7 @@ class UserService:
     
     
     def add_new_user(self,username,email,password):
+        user = User(username=None,email=None,password=None)
         user.username = username         
         user.email = email         
         user.password =  bcrypt.generate_password_hash(password).decode("utf-8")         
