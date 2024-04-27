@@ -235,6 +235,8 @@ const ButtonIcon = styled.button`
 export default function PostPreview() {
     const [title, setTitle] = useState('');
     const [publication, setPublication] = useState('');
+    const [saveTitle, setSaveTitle] = useState('');
+    const [savePublication, setSavePublication] = useState('');
     const [comment, setComment] = useState('');
     const [message, setMessage] = useState('');
     const [user, setUser] = useState();
@@ -246,14 +248,14 @@ export default function PostPreview() {
     const router = useRouter();
 
     const { UserPost } = router.query
-    const post = listPublications.find(publication => publication.id == UserPost);
 
     const CheckEmptyEntry = () => {
         if (editPublication) {
             if (title.trim() === '' || publication.trim() === '') {
                 setMessage('existem campos vazios');
               } else {
-                  setMessage('')
+                EditConfirm();
+                setEditPublication(false);
             }
         } else {
             if (comment.trim() === '') {
@@ -265,6 +267,49 @@ export default function PostPreview() {
         
       }
 
+      const EditConfirm = () => {
+
+        const userDataJson = {
+            title: title,
+            publication: publication
+          };
+        
+        axios.put(`http://127.0.0.1:8080/posts/${UserPost}`, userDataJson, {
+            headers: {
+              'Authorization': `Bearer ${user.token}`
+            }
+          })
+          .then(() => {
+
+            return
+            
+          })
+          .catch((error) => {
+
+            if ((error.response && error.response.data && error.response.data.error_message)) {
+    
+              setMessage(error.response.data.error_message)
+    
+            } else {
+
+                return
+    
+            }
+
+          });
+
+
+      }
+
+      const EditCanceled = () => {
+
+        setTitle(saveTitle)
+        setPublication(savePublication)
+
+        setEditPublication(false);
+      
+    }
+
       const openModal = () => {
         setModalIsOpen(true);
       }
@@ -274,10 +319,33 @@ export default function PostPreview() {
       }
       
       const handleConfirm = () => {
-       
-        console.log("lógica de enviar os dados pro back aqui")
+        
+        axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
+            headers: {
+              'Authorization': `Bearer ${user.token}`
+            }
+          })
+          .then(() => {
 
-        closeModal(); 
+            closeModal();
+            router.push('/home');
+            
+          })
+          .catch((error) => {
+
+            if ((error.response && error.response.data && error.response.data.error_message)) {
+    
+              setMessage(error.response.data.error_message)
+    
+            } else {
+
+                return
+    
+            }
+
+          });
+
+
       }
 
       const CheckPublications = (access_token) => {
@@ -296,10 +364,21 @@ export default function PostPreview() {
             setTitle(GetPost.title)
             setPublication(GetPost.publication)
 
+            setSaveTitle(GetPost.title)
+            setSavePublication(GetPost.publication)
+
          })
       .catch(error => {
 
-        console.log(error.response.data.error_message)
+        if (error.response && error.response.data && error.response.data.error_message) {
+
+            console.log(error.response.data.error_message);
+
+        } else {
+
+            return
+
+        }
 
       });
     }
@@ -329,7 +408,7 @@ export default function PostPreview() {
         return null;
     }
       
-    if (post) {
+    if (title) {
     return (
         <>
             <MainHeader>
@@ -401,7 +480,7 @@ export default function PostPreview() {
                                             Confirmar
                                         </div>
                                     </ButtonIcon>
-                                    <ButtonIcon onClick={() => {setEditPublication(false)}}>
+                                    <ButtonIcon onClick={() => {EditCanceled()}}>
                                         <div>
                                             <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
                                         </div>
@@ -414,9 +493,9 @@ export default function PostPreview() {
                             </FormSection>
                           ) : (
                             <>
-                                <TitlePost>{post.title}</TitlePost>
+                                <TitlePost>{title}</TitlePost>
 
-                                <TextPost>{post.publication}</TextPost>
+                                <TextPost>{publication}</TextPost>
 
                                 <PostSettings>
                                     <button onClick={() => {setEditPublication(true)}}>
@@ -462,7 +541,6 @@ export default function PostPreview() {
                 <ProfileSection>
                     <div>
                         <p>{user && user.username}</p>
-                        <p>0 posts</p>
                     </div>
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
                 </ProfileSection>
