@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import { useRouter } from 'next/router';
 import { HeaderLoginLogout } from "../components/Header"
+import { DefaultButton } from "../components/Button"
+import { InputUserForm } from "../components/Input"
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -13,18 +15,18 @@ const FormSection = styled.section`
 
 
     h2 {
-      color: #fff;
+      color: #535564;
       margin-bottom: 0.5rem;
     }
 
 `;
 
 const Input = styled.input`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
+    color: #535564;
+    border: 2px solid #535564;
     border-radius: 0.5rem;
     outline: 0;
-    background: #181818;
+    background: #DFE2E7;
     margin: 0.5rem 0 0.5rem 0;
     padding: 0.5rem;
     width: 100%;
@@ -45,41 +47,10 @@ const ButtonSection = styled.section`
   }
 `;
 
-const CommonStyling = styled.button`
-    font-size: 1rem;
-    line-height: center;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-
-`;
-
-const ButtonregisterStyled = styled(CommonStyling)`
-    background: #DF2222;
-    border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    color: #000;
-    font-weight: bold;
-
-    &:hover {
-      background: transparent;
-      color: #fff;
-    }
-`;
-
-const Button = styled(ButtonregisterStyled)`
-    color: #fff;
-    transition: background-color border-color 0.3s, color 0.3s;
-
-    &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
-    }
-`;
-
 const ErrorMensage = styled.p`
     font-size: 1rem;
     color: #fff;
-    background: #DF2222;
+    background: #535564;
     padding: 1rem;
     margin-top: 1rem;
 
@@ -139,10 +110,10 @@ export default function Login() {
       <HeaderLoginLogout />
       <FormSection>
         <h2>Login</h2>
-        <div><Input placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
-        <div><Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+        <div><InputUserForm placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+        <div><InputUserForm placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
         <ButtonSection>
-          <Button type="submit" onClick={CheckEmptyEntry}>entrar</Button>
+          <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Entrar" />
         </ButtonSection>
       </FormSection>
       { message && <ErrorMensage>{message}</ErrorMensage>}

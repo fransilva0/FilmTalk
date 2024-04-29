@@ -111,7 +111,7 @@ export default function Home() {
                     <div>
                         <p>{user && user.username}</p>
                     </div>
-                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
+                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="51" height="51" />
                 </ProfileSection>
 
             </MainHeader>

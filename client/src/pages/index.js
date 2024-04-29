@@ -14,7 +14,7 @@ const PresentationSection = styled.section`
     margin: 0 2rem 0 2rem;
 
     p {
-      color: #fff;
+      color: #535564;
       margin: 0.5rem;
     }
 
@@ -37,12 +37,12 @@ function index() {
   return <>
     <HeaderHome />
     <PresentationSection>
-      <Icon icon="mdi:message-text" style={{ color: '#fff', fontSize: '10rem', margin: "0", padding: "0" }} />
+      <Icon icon="mdi:message-text" style={{ color: '#535564', fontSize: '10rem', margin: "0", padding: "0" }} />
       <p>Discuta sobre o seus filmes favoritos</p>
     </PresentationSection>
     <PresentationSection>
       <p>Acompanhe suas discussões e interaja com a comunidade</p>
-      <Icon icon="iconoir:cinema-old" style={{ color: '#fff', fontSize: '10rem', margin: "0", padding: "0"  }} />
+      <Icon icon="iconoir:cinema-old" style={{ color: '#535564', fontSize: '10rem', margin: "0", padding: "0"  }} />
     </PresentationSection>
     <ButtonSection>
       <Link href="/register">

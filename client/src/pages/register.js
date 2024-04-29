@@ -1,6 +1,8 @@
 import React,{ useState, useEffect }  from "react"
 import { useRouter } from 'next/router';
 import { HeaderLoginLogout } from "../components/Header"
+import { DefaultButton } from "../components/Button"
+import { InputUserForm } from "../components/Input"
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -13,25 +15,9 @@ const FormSection = styled.section`
 
 
     h2 {
-      color: #fff;
+      color: #535564;
       margin-bottom: 0.5rem;
     }
-
-`;
-
-const Input = styled.input`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #181818;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-      width: 50rem;
-  }
 
 `;
 
@@ -45,38 +31,10 @@ const ButtonSection = styled.section`
   }
 `;
 
-const CommonStyling = styled.button`
-    font-size: 1rem;
-    line-height: center;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-
-`;
-
-const ButtonregisterStyled = styled(CommonStyling)`
-    background: #DF2222;
-    border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    color: #000;
-    font-weight: bold;
-
-`;
-
-const Button = styled(ButtonregisterStyled)`
-    color: #fff;
-
-    transition: background-color border-color 0.3s, color 0.3s;
-
-    &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
-    }
-`;
-
 const ErrorMensage = styled.p`
     font-size: 1rem;
     color: #fff;
-    background: #DF2222;
+    background: #535564;
     padding: 1rem;
     margin-top: 1rem;
 
@@ -167,12 +125,12 @@ export default function Register() {
       <HeaderLoginLogout />
       <FormSection>
         <h2>Registre-se</h2>
-        <div><Input placeholder="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
-        <div><Input placeholder="E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
-        <div><Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
-        <div><Input placeholder="repeat password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
+        <div><InputUserForm placeholder="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+        <div><InputUserForm placeholder="E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
+        <div><InputUserForm placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
+        <div><InputUserForm placeholder="repeat password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
         <ButtonSection>
-          <Button type="submit" onClick={CheckEmptyEntry}>inscrever-se</Button>
+          <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Inscrever-se" />
         </ButtonSection>
       </FormSection>
       { message && <ErrorMensage>{message}</ErrorMensage>}

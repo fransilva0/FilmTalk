@@ -2,6 +2,8 @@ import React,{ useState }  from "react";
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import { DefaultButton } from "../Button"
+import { InputUserForm } from "../Input"
 
 const FormSection = styled.section`
     display: flex;
@@ -18,22 +20,6 @@ const FormSection = styled.section`
 
 `;
 
-const Input = styled.input`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #181818;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-        width: 50rem;
-    }
-
-`;
-
 const ButtonSection = styled.section`
 
     display: flex;
@@ -44,39 +30,8 @@ const ButtonSection = styled.section`
   }
 `;
 
-const CommonStyling = styled.button`
-    font-size: 1rem;
-    line-height: center;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-
-`;
-
-const ButtonregisterStyled = styled(CommonStyling)`
-    background: #DF2222;
-    border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    color: #000;
-    font-weight: bold;
-
-    &:hover {
-      background: transparent;
-      color: #fff;
-    }
-`;
-
-const Button = styled(ButtonregisterStyled)`
-    color: #fff;
-    transition: background-color border-color 0.3s, color 0.3s;
-
-    &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
-    }
-`;
-
 const ButtonIcon = styled.button`
-    color: #fff;
+    color: #535564;
     background: transparent;
     border: none;
     margin: 2rem 2rem 0;
@@ -154,19 +109,19 @@ export function SettingsScreen () {
           <div>
             <ButtonSection>
               <ButtonIcon type="submit" onClick={handleLogout}>
-                <div><Icon icon="uiw:login" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} /></div>
+                <div><Icon icon="uiw:login" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} /></div>
                 <div>logout</div>
               </ButtonIcon>
             </ButtonSection>
           </div>
 
         <FormSection>
-            <div><Input placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
-            <div><Input placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
-            <div><Input placeholder="new password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
-            <div><Input placeholder="confirm new password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
+            <div><InputUserForm placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+            <div><InputUserForm placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
+            <div><InputUserForm placeholder="new password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
+            <div><InputUserForm placeholder="confirm new password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
             <ButtonSection>
-                <Button type="submit" onClick={CheckEmptyEntry}>salvar</Button>
+                <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Salvar" />
             </ButtonSection>
         </FormSection>
         { message && <ErrorMensage>{message}</ErrorMensage>}
