@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { HeaderLoginLogout } from "../components/Header"
 import { DefaultButton } from "../components/Button"
 import { InputUserForm } from "../components/Input"
+import { ErrorMessage } from "../components/ErrorMessage"
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -10,8 +11,11 @@ const FormSection = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     text-align: center;
     margin: 4rem 2rem 0 2rem;
+    align-items: flex-start;
+    
 
 
     h2 {
@@ -19,42 +23,32 @@ const FormSection = styled.section`
       margin-bottom: 0.5rem;
     }
 
-`;
-
-const Input = styled.input`
-    color: #535564;
-    border: 2px solid #535564;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #DFE2E7;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
     @media (min-width: 1025px) {
-        width: 50rem;
+      widtht: auto;
     }
 
+`;
+
+const Container = styled.div`
+    display: flex;
+    justify-content: center;
 `;
 
 const ButtonSection = styled.section`
 
     display: flex;
-    justify-content: right;
+    flex-direction: column;
+    align-self: stretch;
+    width: 50%;
 
     @media (min-width: 1025px) {
-      width: 82rem;
+   
+      justify-content: left;
+      flex-direction: row;
+      
   }
 `;
 
-const ErrorMensage = styled.p`
-    font-size: 1rem;
-    color: #fff;
-    background: #535564;
-    padding: 1rem;
-    margin-top: 1rem;
-
-`;
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -108,15 +102,17 @@ export default function Login() {
   return (
     <>
       <HeaderLoginLogout />
-      <FormSection>
-        <h2>Login</h2>
-        <div><InputUserForm placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
-        <div><InputUserForm placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
-        <ButtonSection>
-          <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Entrar" />
-        </ButtonSection>
-      </FormSection>
-      { message && <ErrorMensage>{message}</ErrorMensage>}
+      <Container>
+        <FormSection>
+          <h2>Login</h2>
+          <div><InputUserForm placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+          <div><InputUserForm placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+          <ButtonSection>
+            <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Entrar" />
+            { message && <ErrorMessage>{message}</ErrorMessage>}
+          </ButtonSection>
+        </FormSection>
+      </Container>
     </>
   )
 }

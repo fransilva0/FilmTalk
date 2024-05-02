@@ -4,6 +4,7 @@ import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { DefaultButton } from "../Button"
+import { ErrorMessage } from "../ErrorMessage"
 import { InputPublicationTitle, InputPublicationPost } from "../Input"
 
 const GeneralDiv = styled.div`
@@ -24,22 +25,18 @@ const FormSection = styled.section`
 const ButtonSection = styled.section`
 
     display: flex;
-    justify-content: right;
+    flex-direction: column;
     margin-top: 1rem;
 
     @media (min-width: 1025px) {
-        width: 50rem;
+   
+        justify-content: left;
+        flex-direction: row;
+        
     }
 `;
 
-const ErrorMensage = styled.p`
-    font-size: 1rem;
-    color: #fff;
-    background: #535564;
-    padding: 1rem;
-    margin-top: 1rem;
 
-`;
 
 const PublicationsSection = styled.section`
 
@@ -175,8 +172,9 @@ export function UserPosts ({ userProp, setUserProp }) {
                 <div><InputPublicationPost placeholder="Post" type="text" value={publication} onChange={(e) => setPublication(e.target.value)} /></div>
                 <ButtonSection>
                     <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Publicar uma postagem"/>
+                    { message && <ErrorMessage>{message}</ErrorMessage>}
                 </ButtonSection>
-                { message && <ErrorMensage>{message}</ErrorMensage>}
+                
             </FormSection>
 
             <PublicationsSection>

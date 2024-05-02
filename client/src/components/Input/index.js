@@ -18,10 +18,11 @@ const Input = styled.input`
 
 const InputPost = styled.textarea`
     color: #535564;
-    border: 2px solid #535564;
     border-radius: 0.5rem;
     outline: 0;
-    background: #DFE2E7;
+    border: none;
+    background: transparent;
+    box-shadow: 10px 10px 15px rgba(184, 64, 50, 0.5);
     margin: 0.5rem 0 0.5rem 0;
     padding: 0.5rem;
     width: 100%;
@@ -39,6 +40,13 @@ const InputPost = styled.textarea`
 
 `;
 
+const InputTitle = styled(Input)`
+
+    border: none;
+    background: transparent;
+    box-shadow: 10px 10px 15px rgba(184, 64, 50, 0.5);
+`;
+
 export function InputUserForm({placeholder, type, value, onChange}) {
     return (
       <Input placeholder={placeholder} type={type} value={value} onChange={onChange} />
@@ -47,7 +55,7 @@ export function InputUserForm({placeholder, type, value, onChange}) {
 
 export function InputPublicationTitle({placeholder, type, value, onChange}) {
     return (
-        <Input placeholder={placeholder} type={type} value={value} onChange={onChange} />
+        <InputTitle placeholder={placeholder} type={type} value={value} onChange={onChange} />
     )
 }
 

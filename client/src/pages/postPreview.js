@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
 import { MainHeader } from "../components/Header";
 import { DefaultButton } from "../components/Button"
+import { ErrorMessage } from "../components/ErrorMessage"
 import { InputPublicationTitle, InputPublicationPost } from "../components/Input"
 import { Icon } from '@iconify/react';
 
@@ -92,21 +93,6 @@ const FormSection = styled.section`
 
 `;
 
-const Input = styled.input`
-    color: #535564;
-    border: 2px solid #535564;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #DFE2E7;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-        width: 50rem;
-    }
-
-`;
 
 const InputPost = styled.textarea`
     color: #535564;
@@ -131,26 +117,21 @@ const InputPost = styled.textarea`
 
 `;
 
-const InputPostEdit = styled(InputPost)`
-        height: 20rem;
-
-`;
-
 const ButtonSection = styled.section`
 
     display: flex;
-    justify-content: left;
-    align-items: center;
+    flex-direction: column;
+    align-self: stretch;
+    width: 50%;
+
+    @media (min-width: 1025px) {
+   
+      justify-content: left;
+      flex-direction: row;
+      
+  }
 `;
 
-const ErrorMensage = styled.p`
-    font-size: 1rem;
-    color: #fff;
-    background: #535564;
-    padding: 1rem;
-    margin-top: 1rem;
-
-`;
 
 const PostSettings = styled.div`
 
@@ -455,6 +436,7 @@ export default function PostPreview() {
                         editPublication ? (                            
                             <FormSection>
                                 <div><InputPublicationTitle placeholder="Title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
+                                <br />
                                 <div><InputPublicationPost editPublication={editPublication} placeholder="Post" type="text" value={publication} onChange={(e) => setPublication(e.target.value)} /></div>
                                 <ButtonSection>
                                     <ButtonIcon type="submit" onClick={CheckEmptyEntry}>
@@ -474,7 +456,7 @@ export default function PostPreview() {
                                         </div>
                                     </ButtonIcon>
                                 </ButtonSection>
-                                { message && <ErrorMensage>{message}</ErrorMensage>}
+                                { message && <ErrorMessage>{message}</ErrorMessage>}
                             </FormSection>
                           ) : (
                             <>
@@ -483,7 +465,7 @@ export default function PostPreview() {
                                 <TextPost>{publication}</TextPost>
 
                                 <PostSettings>
-                                    <button onClick={() => {setEditPublication(true)}}>
+                                    <button onClick={() => {setEditPublication(true); setMessage('');}}>
                                         <Icon icon="tabler:edit" style={{ color: '#535564', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
                                     </button>
                                     <button onClick={openModal}>
@@ -498,9 +480,8 @@ export default function PostPreview() {
                                     <div><InputPost placeholder="Comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)} /></div>
                                     <ButtonSection>
                                         <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Publicar" />
+                                        { message && <ErrorMessage>{message}</ErrorMessage>}
                                     </ButtonSection>
-
-                                    { message && <ErrorMensage>{message}</ErrorMensage>}
 
                                 </FormSection>
 
