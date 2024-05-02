@@ -11,8 +11,10 @@ def error_response(error_message, error_code,action,status=None):
 
     return jsonify(error_response), error_code
 
-def success_response(action,status=None,parameter=None,token=None):
+def success_response(action,status=None,parameter=None,token=None,code=None):
     
+    code = 200 if code == None else code
+
     response_data = {
         "action" : action,
         "status": "executed" if status == None else status
@@ -23,4 +25,4 @@ def success_response(action,status=None,parameter=None,token=None):
     if token != None:
         response_data["token"] = token
         
-    return jsonify(response_data), 200
+    return jsonify(response_data), code

@@ -5,7 +5,6 @@ class Posts(db.Model):
     
     __tablename__ = "posts"
 
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     title = db.Column(db.String(255),nullable=False)
     publication = db.Column(db.String,nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)

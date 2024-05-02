@@ -28,22 +28,56 @@ class UserService:
     
     def findUserByUsername(self,username):
         user = userRepository.getByUsername(username=username)
+        if user == None:
+            raise Exception("Usuário não encontrado ou não existe!",404)
         return user
     
     def findUserByEmail(self,email):
         user = userRepository.getByEmail(email=email)
+        if user == None:
+            raise Exception("Usuário não encontrado ou não existe!",404)
         return user
+    
 
-    def validate_new_user(self,username,email,password):
+    def validate_new_username(self,username):
         validate_username(username)
-        validate_email(email)
-        validate_password(password)
+        user = userRepository.getByUsername(username=username)
+        if user != None:
+            raise Exception("Esse Username já foi cadastrado!",409)
         pass
         
 
+    def validate_new_email(self,email):
+        validate_email(email)
+        user = userRepository.getByEmail(email=email)
+        if user != None:
+            raise Exception("Esse e-mail já foi cadastrado",409)
+        pass
+
+
+    def update_username(self,user_id,username):
+        user = userRepository.getById(user_id)
+        user.username = username
+        userRepository.update(user)
+        return 
+    
+    def update_email(self,user_id,email):
+        user = userRepository.getById(user_id)
+        user.email = email
+        userRepository.update(user)
+        return 
+    
+    def update_password(self,user_id,password):
+        user = userRepository.getById(user_id)
+        user.password = password
+        userRepository.update(user)
+        return 
+    
 
     def authenticate_user(self,username,password):
         user = userRepository.getByUsername(username=username)
+        if user == None:
+            raise Exception("Usuário e/ou senha inválidos",401)
         if not bcrypt.check_password_hash(user.password, password):
             raise Exception("Usuário e/ou senha inválidos",401)
         user = userSchema.dump(user)

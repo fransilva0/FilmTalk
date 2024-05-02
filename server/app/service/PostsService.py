@@ -17,7 +17,6 @@ class PostsService:
         post.publication = publication
         post.user_id = user_id
         postsRepository.save(post)
-        print(post)
         return
     
     def update_publication(self,user_id,post_id,title,publication):

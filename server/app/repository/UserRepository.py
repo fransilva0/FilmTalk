@@ -9,21 +9,13 @@ class UserRepository(BaseRepository):
         super().__init__(User)
     
     def getByUsername(self,username):
-        try:
-            user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one()
-        except:
-            #TODO: melhorar o traceback runtime error dessa Exception
-            raise Exception("Usuário não encontrado ou não existe!",404)
-        else:  
-            return user
+        user = db.session.execute(db.select(User).filter_by(username=username)).scalar_one_or_none()
+        return user
+        
     def getByEmail(self,email):
-        try:
-            user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one()
-        except:
-            #TODO: melhorar o traceback runtime error dessa Exception
-            raise Exception("Usuário não encontrado ou não existe!",404)
-        else:
-            return user
+        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
+        return user
+
 
     
 
