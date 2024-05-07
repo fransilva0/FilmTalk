@@ -7,6 +7,7 @@ import imgProfile from "../assets/img-profile.jpg";
 import { MainHeader } from "../components/Header"
 import { SettingsScreen } from "../components/settingsScreen";
 import { UserPosts } from "../components/UserPosts";
+import { UserFeed } from "../components/UserFeed";
 import { Icon } from '@iconify/react';
 
 const ProfileSection = styled.section`
@@ -114,7 +115,7 @@ const StyledIconNavbar = styled(StyledIcon)`
 
 
 export default function Home() {
-    const [Screen, setScreen] = useState('PublicationsProfile');
+    const [Screen, setScreen] = useState('userFeed');
     const [isBarVisible, setBarVisible] = useState(false);
     const [user, setUser] = useState();
 
@@ -132,11 +133,13 @@ export default function Home() {
     let renderContent;
 
     if (Screen === 'PublicationsProfile') {
-        renderContent = <UserPosts userProp={user} setUserProp={setUser}/>;
+        renderContent = <UserPosts userProp={user} setUserProp={setUser} />;
         
     } else if (Screen === 'settings') {
       renderContent = <SettingsScreen/>;
       
+    } else if (Screen === 'userFeed') {
+        renderContent = <UserFeed userProp={user} setUserProp={setUser} setScreen={setScreen} />;
     }
 
    
@@ -204,7 +207,7 @@ export default function Home() {
 
                     <div>
 
-                        <Button>
+                        <Button onClick={() => ControlScreen('userFeed')}>
                             <p>Página Inicial</p>
                             <StyledIconNavbar icon="ic:round-home" />
 
