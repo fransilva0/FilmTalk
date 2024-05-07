@@ -16,35 +16,66 @@ const ButtonloginStyled = styled(CommonStyling)`
     transition: box-shadow 0.3s;
 
     &:hover {
-      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada no hover */
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
     }
 
     &:focus {
-      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2); /* Sombra mais suave quando focado */
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
     }
 `;
 
 const ButtonregisterStyled = styled(CommonStyling)`
-    background: #DF2222;
+    background: #B84032;
     border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    color: #000;
+    border: none;
+    color: #fff;
     font-weight: bold;
-    transition: background-color border-color 0.3s, color 0.3s;
-
+    padding: 1rem;
+    
     &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
+      background-image: linear-gradient(90deg, #DF8271, #B84032);
+      animation: slide 0.5s linear;
+      background-size: 200% 100%;
+      border: none;
+      transition: background-position 0.3s ease;
     }
+
+    @keyframes slide {
+      0% {
+        background-position: 100% 0;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+
 `;
 
-const DefaultButtonStyled = styled(ButtonregisterStyled)`
+const Button = styled(ButtonregisterStyled)`
     color: #fff;
+    position: relative;
+    overflow: hidden;
+    border: none;
 
     &:hover {
-      background: transparent;
+      background-image: linear-gradient(90deg, #DF8271, #B84032);
+      animation: slide 0.5s linear;
+      background-size: 200% 100%;
       color: #fff;
+      border: none;
+      transition: background-position 0.3s ease;
     }
+
+    @keyframes slide {
+      0% {
+        background-position: 100% 0;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+
+    
 `;
 
 export function ButtonLogin() {
@@ -59,8 +90,8 @@ export function ButtonRegister() {
   )
 }
 
-export function DefaultButton({text}) {
+export function DefaultButton({type, onClick, text}) {
   return (
-    <DefaultButtonStyled>{text}</DefaultButtonStyled>
+    <Button type={type} onClick={onClick}>{text}</Button>
   )
 }

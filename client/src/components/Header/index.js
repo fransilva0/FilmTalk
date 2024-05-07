@@ -5,9 +5,8 @@ import Link from 'next/link';
 
 
 const CommonStyling = styled.header`
-  margin-top: 1rem;
   padding: 2rem;
-  background: #DF2222;
+  background: linear-gradient(90deg, #B84032, #535564);
 
   h1 {
     color: #FFF8F8;
@@ -20,6 +19,7 @@ const HeaderHomeStyled = styled(CommonStyling)`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem;
 `;
 
 const HeaderLoginLogoutStyled = styled(CommonStyling)`
