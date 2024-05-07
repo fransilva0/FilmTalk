@@ -67,6 +67,7 @@ class UserService:
         userRepository.update(user)
         return 
     
+    #:TODO: a nova senha deve ser armazenada no formato hash
     def update_password(self,user_id,password):
         user = userRepository.getById(user_id)
         user.password = password

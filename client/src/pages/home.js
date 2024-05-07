@@ -136,7 +136,7 @@ export default function Home() {
         renderContent = <UserPosts userProp={user} setUserProp={setUser} />;
         
     } else if (Screen === 'settings') {
-      renderContent = <SettingsScreen/>;
+      renderContent = <SettingsScreen setScreen={setScreen} />;
       
     } else if (Screen === 'userFeed') {
         renderContent = <UserFeed userProp={user} setUserProp={setUser} setScreen={setScreen} />;
