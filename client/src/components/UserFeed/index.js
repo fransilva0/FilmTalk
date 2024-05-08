@@ -20,7 +20,7 @@ const ProfileSection = styled.section`
     margin: 2rem;
     background: linear-gradient(90deg, #B84032, #535564);
     padding: 2rem;
-    border-radius: 2rem;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
 
     div {
         margin-left: 1rem;
@@ -64,16 +64,12 @@ const PublicationsSection = styled.section`
     padding: 1rem;
     padding-top: 4rem;
 
-    h2 {
-        border-bottom: 1px solid #535564;
-        color: #535564;
-        padding-bottom: 1rem;
-        font-size: 1rem;
-    }
 
     @media (min-width: 1025px) {
 
         width: 40%;
+        margin-left: auto;
+        margin-right: auto;
         
     }
 
@@ -82,11 +78,10 @@ const PublicationsSection = styled.section`
 const Publication = styled.div`
 
     background: transparent;
-    padding: 2rem;
+    padding: 1rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin-top: 2rem; 
-    align-items: center;
     border: 1px solid rgba(0, 0, 0, 0.25);
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.25);
 
@@ -96,20 +91,40 @@ const Publication = styled.div`
         background: transparent;
         border: none;
         text-align: left;
-        width: 40%;
         cursor: pointer;
+        margin: 1rem;
     }
 
-    div {
-        display: flex;
-        color: #535564;
-        font-size: 0.8rem;
-        align-items: center;
 
-        p {
-            padding-right: 0.5rem;
-        }
+
+
+`;
+
+const ProfileImage = styled(Image)`
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 0.5rem;
+`;
+
+const ProfilePostSection = styled.section`
+
+    display: flex;
+    align-items: center;
+
+`;
+
+const CommentSection = styled.div`
+    margin-top: 10px;
+    display: flex;
+    color: #535564;
+    font-size: 0.8rem;
+    justify-content: right;
+
+    p {
+        padding-right: 0.5rem;
     }
+
 
 `;
 
@@ -164,24 +179,33 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                 </ProfileSection>
             </Container>
 
-            <Container>
             <PublicationsSection>
                 {listPublications && listPublications.map(publication => (
                 <Publication key={publication.id}>
 
-                    <button onClick={() => {
-                        router.push(`/postPreview?UserPost=${publication.id}`)
-                      }}>{publication.title}</button>
+                    <ProfilePostSection>
+                        <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" />
+                        <p>{userProp && userProp.username}</p>
+                    </ProfilePostSection>
 
-                    <div>
-                        <p>0 comentário(s)</p>
-                        <Icon icon="tabler:message-circle-2" style={{ color: '#535564', fontSize: '3rem', margin: "0", padding: "0" }} />
-                    </div>
+
+
+                        <button onClick={() => {
+                            router.push(`/postPreview?UserPost=${publication.id}`)
+                          }}>{publication.title}</button>
+
+  
+
+                    <CommentSection>
+                            <p>0 comentário(s)</p>
+                            <p>{'\u25CF'}</p>
+                            <p>XX/XX/XXXX</p>
+                    </CommentSection>
+                    
 
                 </Publication>))}
 
             </PublicationsSection>
-            </Container>
         </>
     )
 }
