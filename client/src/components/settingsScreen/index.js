@@ -1,103 +1,48 @@
-import React,{ useState }  from "react";
-import { useRouter } from 'next/router';
+import React,{ useState, useEffect }  from "react";
 import styled from 'styled-components';
-import { Icon } from '@iconify/react';
+import { DefaultButton } from "../Button"
+import { InputUserForm } from "../Input"
+import { ErrorMessage } from "../ErrorMessage"
 
 const FormSection = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     text-align: center;
     margin: 4rem 2rem 0 2rem;
+    align-items: flex-start;
+    
 
 
-    h2 {
-      color: #fff;
-      margin-bottom: 0.5rem;
+    p {
+      color: #535564;
+    }
+
+    @media (min-width: 1025px) {
+      widtht: auto;
     }
 
 `;
 
-const Input = styled.input`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #181818;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-        width: 50rem;
-    }
-
+const Container = styled.div`
+    display: flex;
+    justify-content: center;
 `;
 
 const ButtonSection = styled.section`
 
     display: flex;
-    justify-content: right;
-
-    @media (min-width: 1025px) {
-      width: 82rem;
-  }
-`;
-
-const CommonStyling = styled.button`
-    font-size: 1rem;
-    line-height: center;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-
-`;
-
-const ButtonregisterStyled = styled(CommonStyling)`
-    background: #DF2222;
-    border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    color: #000;
-    font-weight: bold;
-
-    &:hover {
-      background: transparent;
-      color: #fff;
-    }
-`;
-
-const Button = styled(ButtonregisterStyled)`
-    color: #fff;
-    transition: background-color border-color 0.3s, color 0.3s;
-
-    &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
-    }
-`;
-
-const ButtonIcon = styled.button`
-    color: #fff;
-    background: transparent;
-    border: none;
-    margin: 2rem 2rem 0;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    cursor: pointer;
+    align-self: stretch;
+    width: 50%;
 
     @media (min-width: 1025px) {
-      margin: 2rem 0 0;
+   
+      justify-content: left;
+      flex-direction: row;
+      
   }
-
-`;
-
-const ErrorMensage = styled.p`
-    font-size: 1rem;
-    color: #fff;
-    background: #DF2222;
-    padding: 1rem;
-    margin-top: 1rem;
-
 `;
 
 
@@ -106,23 +51,30 @@ export function SettingsScreen () {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [isValidEmail, setIsValidEmail] = useState(false);
     const [message, setMessage] = useState('');
-
-    const router = useRouter();
+    const [user, setUser] = useState();
   
   
-    const CheckEmptyEntry = () => {
-      if (username.trim() === '' || email.trim() === '' || password.trim() === '' || repeatPassword.trim() === '') {
-        setMessage('existem campos vazios');
+    const CheckUsername= () => {
+      if (username.trim() === '') {
+        setMessage('o username não pode ser vazio');
       } else {
-        CheckPassword();
+        setMessage('')
+        {/* chamar função de mudar senha do backend */}
       }
     }
   
     const CheckPassword = () => {
-      if (password == repeatPassword) {
-        CheckEmail();
+    
+      if (password.trim() === '' || repeatPassword.trim() === '') {
+
+        setMessage('Os campos de senha não podem ser vazios');
+        
+      } else if (password == repeatPassword ) {
+
+        setMessage('')
+        {/* chamar função de mudar senha do backend */}
+        
       } else {
         setMessage('Os campos de senha precisam ser iguais');
       }
@@ -131,45 +83,70 @@ export function SettingsScreen () {
     const CheckEmail = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const isValid = emailRegex.test(email);
-      setIsValidEmail(isValid);
-  
-      if (isValidEmail) {
-        setMessage('email válido.');
+      
+      if (isValid) {
+        setMessage('');
+        {/* chamar função de mudar email do backend */}
       } else {
         setMessage('Por favor, insira um email válido.');
       }
   
     }
 
-    const handleLogout = () => {
+    useEffect(() => {
 
-      localStorage.clear();
-      router.push('/login');
-    
-    };
+      const loggedInUser = localStorage.getItem("user");
+
+      if (loggedInUser) {
+
+        const foundUser = JSON.parse(loggedInUser);
+
+        setUser(foundUser);
+
+      } else {
+          
+          router.push('/login');
+          
+        }
+    }, []);
 
 
     return (
-        <>
-          <div>
-            <ButtonSection>
-              <ButtonIcon type="submit" onClick={handleLogout}>
-                <div><Icon icon="uiw:login" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} /></div>
-                <div>logout</div>
-              </ButtonIcon>
-            </ButtonSection>
-          </div>
+      <>
+        <Container>
 
         <FormSection>
-            <div><Input placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
-            <div><Input placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
-            <div><Input placeholder="new password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
-            <div><Input placeholder="confirm new password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
+            <p>{user && user.username}</p>
+            <div><InputUserForm placeholder="modify username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
             <ButtonSection>
-                <Button type="submit" onClick={CheckEmptyEntry}>salvar</Button>
+                <DefaultButton type="submit" onClick={CheckUsername} text="Salvar" />
             </ButtonSection>
         </FormSection>
-        { message && <ErrorMensage>{message}</ErrorMensage>}
-        </>
+        </Container>
+
+        <Container>
+        <FormSection>
+            <p>{user && user.email}</p>
+            <div><InputUserForm placeholder="modify E-mail" type="text" value={email} onChange={(e) => setEmail(e.target.value)}/></div>
+            <ButtonSection>
+                <DefaultButton type="submit" onClick={CheckEmail} text="Salvar" />
+            </ButtonSection>
+        </FormSection>
+        </Container>
+        
+        <Container>
+        <FormSection>
+            <div><InputUserForm placeholder="new password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/></div>
+            <div><InputUserForm placeholder="confirm new password" type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} /></div>
+            <ButtonSection>
+                <DefaultButton type="submit" onClick={CheckPassword} text="Salvar" />
+            </ButtonSection>
+        </FormSection>
+
+        </Container>
+
+        <Container> { message && <ErrorMessage>{message}</ErrorMessage>} </Container>
+        
+      </>
     )
 }

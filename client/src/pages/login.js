@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import { useRouter } from 'next/router';
 import { HeaderLoginLogout } from "../components/Header"
+import { DefaultButton } from "../components/Button"
+import { InputUserForm } from "../components/Input"
+import { ErrorMessage } from "../components/ErrorMessage"
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -8,82 +11,44 @@ const FormSection = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     text-align: center;
     margin: 4rem 2rem 0 2rem;
+    align-items: flex-start;
+    
 
 
     h2 {
-      color: #fff;
+      color: #535564;
       margin-bottom: 0.5rem;
+    }
+
+    @media (min-width: 1025px) {
+      widtht: auto;
     }
 
 `;
 
-const Input = styled.input`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #181818;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-        width: 50rem;
-    }
-
+const Container = styled.div`
+    display: flex;
+    justify-content: center;
 `;
 
 const ButtonSection = styled.section`
 
     display: flex;
-    justify-content: right;
+    flex-direction: column;
+    align-self: stretch;
+    width: 50%;
 
     @media (min-width: 1025px) {
-      width: 82rem;
+   
+      justify-content: left;
+      flex-direction: row;
+      
   }
 `;
 
-const CommonStyling = styled.button`
-    font-size: 1rem;
-    line-height: center;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-
-`;
-
-const ButtonregisterStyled = styled(CommonStyling)`
-    background: #DF2222;
-    border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    color: #000;
-    font-weight: bold;
-
-    &:hover {
-      background: transparent;
-      color: #fff;
-    }
-`;
-
-const Button = styled(ButtonregisterStyled)`
-    color: #fff;
-    transition: background-color border-color 0.3s, color 0.3s;
-
-    &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
-    }
-`;
-
-const ErrorMensage = styled.p`
-    font-size: 1rem;
-    color: #fff;
-    background: #DF2222;
-    padding: 1rem;
-    margin-top: 1rem;
-
-`;
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -137,15 +102,17 @@ export default function Login() {
   return (
     <>
       <HeaderLoginLogout />
-      <FormSection>
-        <h2>Login</h2>
-        <div><Input placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
-        <div><Input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
-        <ButtonSection>
-          <Button type="submit" onClick={CheckEmptyEntry}>entrar</Button>
-        </ButtonSection>
-      </FormSection>
-      { message && <ErrorMensage>{message}</ErrorMensage>}
+      <Container>
+        <FormSection>
+          <h2>Login</h2>
+          <div><InputUserForm placeholder="user name" type="text" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+          <div><InputUserForm placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+          <ButtonSection>
+            <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Entrar" />
+            { message && <ErrorMessage>{message}</ErrorMessage>}
+          </ButtonSection>
+        </FormSection>
+      </Container>
     </>
   )
 }

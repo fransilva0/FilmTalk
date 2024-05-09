@@ -53,9 +53,8 @@
 
 - [x] Sistema de Registro/login funcional;<br />
 - [x] Página inicial de postagens do forum;<br />
-- [ ] Página de usuário para criar, visualizar, editar e deletar suas postagens;<br />
-- [ ] Página de usuário para visualizar postagens da comunidade;<br/>
-- [ ] Usuário pode realizar comentários nas postagens;<br/>
+- [x] Página de usuário para criar, visualizar, editar e deletar suas postagens;<br />
+- [ ] Página de usuário para visualizar e comentar postagens da comunidade;<br/>
 - [ ] Usuário pode acessar perfil de outros usuários e visualizar suas postagens;<br/>
 
 ## :memo: Licença ##

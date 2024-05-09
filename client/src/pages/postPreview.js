@@ -6,6 +6,9 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
 import { MainHeader } from "../components/Header";
+import { DefaultButton } from "../components/Button"
+import { ErrorMessage } from "../components/ErrorMessage"
+import { InputPublicationTitle, InputPublicationPost } from "../components/Input"
 import { Icon } from '@iconify/react';
 
 const ProfileSection = styled.section`
@@ -52,8 +55,8 @@ const Section = styled.section`
 
 const TitlePost = styled.h1`
 
-    border-bottom: 1px solid #DF2222;
-    color: #fff;
+    border-bottom: 1px solid #535564;
+    color: #535564;
     padding-bottom: 1rem;
     font-size: 1.5rem;
     text-align: center;
@@ -62,8 +65,8 @@ const TitlePost = styled.h1`
 
 const TitleComments = styled.h2`
 
-    border-bottom: 1px solid #DF2222;
-    color: #fff;
+    border-bottom: 1px solid #535564;
+    color: #535564;
     padding-bottom: 1rem;
     font-size: 1rem;
 
@@ -71,7 +74,7 @@ const TitleComments = styled.h2`
 
 const TextPost = styled.p`
 
-    color: #fff;
+    color: #535564;
     padding: 1rem 0 1rem 0;
     width: 90%;
 
@@ -80,7 +83,7 @@ const TextPost = styled.p`
 const FormSection = styled.section`
 
     h2 {
-      color: #fff;
+      color: #535564;
       margin-bottom: 0.5rem;
     }
 
@@ -90,28 +93,13 @@ const FormSection = styled.section`
 
 `;
 
-const Input = styled.input`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #181818;
-    margin: 0.5rem 0 0.5rem 0;
-    padding: 0.5rem;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-        width: 50rem;
-    }
-
-`;
 
 const InputPost = styled.textarea`
-    color: #FFFFFF;
-    border: 2px solid #9F9F9F;
+    color: #535564;
+    border: 2px solid #535564;
     border-radius: 0.5rem;
     outline: 0;
-    background: #181818;
+    background: #DFE2E7;
     margin: 1rem 0 1rem 0;
     padding: 0.5rem;
     width: 100%;
@@ -129,45 +117,21 @@ const InputPost = styled.textarea`
 
 `;
 
-const InputPostEdit = styled(InputPost)`
-        height: 20rem;
-
-`;
-
 const ButtonSection = styled.section`
 
     display: flex;
-    justify-content: right;
+    flex-direction: column;
+    align-self: stretch;
+    width: 50%;
+
+    @media (min-width: 1025px) {
+   
+      justify-content: left;
+      flex-direction: row;
+      
+  }
 `;
 
-const Button = styled.button`
-    font-size: 1rem;
-    line-height: center;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-    color: #fff;
-    background: #DF2222;
-    border-radius: 0.5rem;
-    border: 4px solid #DF2222;
-    font-weight: bold;
-    transition: background-color border-color 0.3s, color 0.3s;
-
-    &:hover {
-        background-color: #c20000;
-        border-color: #c20000; 
-        color: #eee;
-    }
-
-`;
-
-const ErrorMensage = styled.p`
-    font-size: 1rem;
-    color: #fff;
-    background: #DF2222;
-    padding: 1rem;
-    margin-top: 1rem;
-
-`;
 
 const PostSettings = styled.div`
 
@@ -217,18 +181,20 @@ const DeletePostPopup = styled.section`
 
 const ButtonIcon = styled.button`
 
-    color: #fff;
+    color: #535564;
     background: transparent;
     border: none;
     margin: 2rem 2rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-text: center;
     cursor: pointer;
 
-    @media (min-width: 1025px) {
-        margin: 2rem 2rem 0;
+    div {
+        width: 100%;
     }
+
 
 `;
 
@@ -417,7 +383,7 @@ export default function PostPreview() {
                     <div>
                         <p>{user && user.username}</p>
                     </div>
-                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="61" height="61" />
+                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="51" height="51" />
                 </ProfileSection>
 
             </MainHeader>
@@ -469,12 +435,13 @@ export default function PostPreview() {
                     { 
                         editPublication ? (                            
                             <FormSection>
-                                <div><Input placeholder="Title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
-                                <div><InputPostEdit editPublication={editPublication} placeholder="Post" type="text" value={publication} onChange={(e) => setPublication(e.target.value)} /></div>
+                                <div><InputPublicationTitle placeholder="Title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} /></div>
+                                <br />
+                                <div><InputPublicationPost editPublication={editPublication} placeholder="Post" type="text" value={publication} onChange={(e) => setPublication(e.target.value)} /></div>
                                 <ButtonSection>
                                     <ButtonIcon type="submit" onClick={CheckEmptyEntry}>
                                         <div>
-                                            <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                            <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
                                         </div>
                                         <div>
                                             Confirmar
@@ -482,14 +449,14 @@ export default function PostPreview() {
                                     </ButtonIcon>
                                     <ButtonIcon onClick={() => {EditCanceled()}}>
                                         <div>
-                                            <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                            <Icon icon="ic:twotone-cancel" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
                                         </div>
                                         <div>
                                             Cancelar
                                         </div>
                                     </ButtonIcon>
                                 </ButtonSection>
-                                { message && <ErrorMensage>{message}</ErrorMensage>}
+                                { message && <ErrorMessage>{message}</ErrorMessage>}
                             </FormSection>
                           ) : (
                             <>
@@ -498,11 +465,11 @@ export default function PostPreview() {
                                 <TextPost>{publication}</TextPost>
 
                                 <PostSettings>
-                                    <button onClick={() => {setEditPublication(true)}}>
-                                        <Icon icon="tabler:edit" style={{ color: '#fff', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
+                                    <button onClick={() => {setEditPublication(true); setMessage('');}}>
+                                        <Icon icon="tabler:edit" style={{ color: '#535564', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
                                     </button>
                                     <button onClick={openModal}>
-                                        <Icon icon="fluent:delete-16-filled" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                        <Icon icon="fluent:delete-16-filled" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
                                     </button>
                                 </PostSettings>
 
@@ -512,10 +479,9 @@ export default function PostPreview() {
 
                                     <div><InputPost placeholder="Comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)} /></div>
                                     <ButtonSection>
-                                        <Button type="submit" onClick={CheckEmptyEntry}>Publicar</Button>
+                                        <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Publicar" />
+                                        { message && <ErrorMessage>{message}</ErrorMessage>}
                                     </ButtonSection>
-
-                                    { message && <ErrorMensage>{message}</ErrorMensage>}
 
                                 </FormSection>
 
