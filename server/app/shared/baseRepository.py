@@ -19,14 +19,9 @@ class BaseRepository:
         db.session.commit()
 
     def getById(self,id):
-        try:
-            object = db.get_or_404(self.model,id)
-#TODO:tratamento de exeção para ser feito
-
-        except:
-            raise Exception()
-        else:    
-            return object
+        object = db.session.execute(db.select(self.model).filter_by(id=id)).scalar_one_or_none()
+        return object
         
     def getAll(self):
-        ...
+        list = db.session.scalars(db.select(self.model)).fetchmany()
+        return list
