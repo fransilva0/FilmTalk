@@ -69,7 +69,7 @@ class UserService:
     
     def update_password(self,user_id,password):
         user = userRepository.getById(user_id)
-        user.password = password
+        user.password =  bcrypt.generate_password_hash(password).decode("utf-8")
         userRepository.update(user)
         return 
     
