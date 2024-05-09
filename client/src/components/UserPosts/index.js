@@ -62,8 +62,6 @@ const Publication = styled.div`
 
     background: transparent;
     padding: 2rem;
-    display: flex;
-    justify-content: space-between;
     margin-top: 2rem; 
     align-items: center;
     border: 1px solid rgba(0, 0, 0, 0.25);
@@ -75,20 +73,22 @@ const Publication = styled.div`
         background: transparent;
         border: none;
         text-align: left;
-        width: 40%;
         cursor: pointer;
     }
 
-    div {
-        display: flex;
-        color: #535564;
-        font-size: 0.8rem;
-        align-items: center;
+`;
 
-        p {
-            padding-right: 0.5rem;
-        }
+const CommentSection = styled.div`
+    margin-top: 10px;
+    display: flex;
+    color: #535564;
+    font-size: 0.8rem;
+    justify-content: right;
+
+    p {
+        padding-right: 0.5rem;
     }
+
 
 `;
 
@@ -187,10 +187,11 @@ export function UserPosts ({ userProp, setUserProp }) {
                         router.push(`/postPreview?UserPost=${publication.id}`)
                       }}>{publication.title}</button>
 
-                    <div>
+                    <CommentSection>
                         <p>0 comentário(s)</p>
-                        <Icon icon="tabler:message-circle-2" style={{ color: '#535564', fontSize: '3rem', margin: "0", padding: "0" }} />
-                    </div>
+                        <p>{'\u25CF'}</p>
+                        <p>XX/XX/XXXX</p>
+                    </CommentSection>
 
                 </Publication>))}
 

@@ -1,4 +1,6 @@
 import React,{ useState, useEffect }  from "react";
+import { useRouter } from 'next/router';
+import axios from 'axios';
 import styled from 'styled-components';
 import { DefaultButton } from "../Button"
 import { InputUserForm } from "../Input"
@@ -46,13 +48,44 @@ const ButtonSection = styled.section`
 `;
 
 
-export function SettingsScreen () {
+export function SettingsScreen ({setScreen}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [user, setUser] = useState();
+
+    const router = useRouter()
+
+
+    const UpdateUserData = (field, value) => {
+      const userDataJson = {
+        [field]: value
+      };
+    
+      axios.patch('http://127.0.0.1:8080/users', userDataJson, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
+        .then(() => {
+          if ([field] != "password") {
+
+            const user = JSON.parse(localStorage.getItem('user'))
+            user[field] = value;
+            localStorage.setItem('user', JSON.stringify(user));
+            
+          }
+    
+          router.reload();
+        })
+        .catch((error) => {
+          if ((error.response)) {
+            setMessage(error.response.data.error_message)
+          }
+        });
+    }
   
   
     const CheckUsername= () => {
@@ -60,7 +93,7 @@ export function SettingsScreen () {
         setMessage('o username não pode ser vazio');
       } else {
         setMessage('')
-        {/* chamar função de mudar senha do backend */}
+        UpdateUserData("username", username);
       }
     }
   
@@ -73,7 +106,7 @@ export function SettingsScreen () {
       } else if (password == repeatPassword ) {
 
         setMessage('')
-        {/* chamar função de mudar senha do backend */}
+        UpdateUserData("password", password);
         
       } else {
         setMessage('Os campos de senha precisam ser iguais');
@@ -86,7 +119,7 @@ export function SettingsScreen () {
       
       if (isValid) {
         setMessage('');
-        {/* chamar função de mudar email do backend */}
+        UpdateUserData("email", email);
       } else {
         setMessage('Por favor, insira um email válido.');
       }
