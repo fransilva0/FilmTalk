@@ -24,6 +24,8 @@ class UserService:
     
     def findUserById(self,id):
         user = userRepository.getById(id=id)
+        if user == None:
+            raise Exception("Usuário não encontrado ou não existe!",404)
         return user
     
     def findUserByUsername(self,username):
