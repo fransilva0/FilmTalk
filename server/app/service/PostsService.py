@@ -1,7 +1,7 @@
 from app.model.Posts import Posts
 from app.schemas.PostsSchema import PostsSchema
 from app.repository.PostsRepository import PostsRepository
-from app.shared.util.api_methods import convert_posts_userid_to_username
+from app.shared.util.api_methods import convert_posts_userid_to_username,convert_post_userid_to_username
 
 postsSchema = PostsSchema()
 postsRepository = PostsRepository()
@@ -42,7 +42,7 @@ class PostsService:
         #comments = find_all_comments_by_post_id(post.id)
         post = postsSchema.dump(post)
         #post["comments"] = comments
-        response = convert_posts_userid_to_username(post)
+        response = convert_post_userid_to_username(post)
         return response
         
     def findAllPublicationByUserId(self,user_id):
