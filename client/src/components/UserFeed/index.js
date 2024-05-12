@@ -128,8 +128,45 @@ const CommentSection = styled.div`
 
 `;
 
+const Spinner = styled.span`
+
+width: 48px;
+height: 48px;
+border: 5px solid #DF8271;
+border-bottom-color: transparent;
+border-radius: 50%;
+display: inline-block;
+box-sizing: border-box;
+animation: rotation 1s linear infinite;
+margin: 1rem;
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
+    
+`;
+
+const StyleIcon = styled(Icon)`
+  color: #B84032;
+  font-size: 5rem;
+  margin: 1rem;
+  border-radius: 5rem;
+  border: 3px solid #B84032;
+  padding: 0;
+  
+
+`;
+
 export function UserFeed ({ userProp, setUserProp, setScreen }) {
     const [listPublications, setListPublications] = useState([]);
+    const [configPagination, setConfigPagination] = useState([]);
+    const [offset, setOffset] = useState(1);
+    const [loading, setLoading] = useState(false);
     
     const router = useRouter()
     const access_token = userProp && userProp.token
@@ -140,16 +177,23 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
 
       }, []);
 
-    const CheckPublications = () => {
+    const CheckPublications = async () => {
 
-        axios.get('http://127.0.0.1:8080/posts', {
+        setLoading(true);
+        await axios.get(`http://127.0.0.1:8080/posts/page?offset=${offset}`, {
             headers: {
               'Authorization': `Bearer ${access_token}`
             }
           })
         .then(response => {
 
-            setListPublications(response.data.requested_data);
+            setTimeout(() => {
+                setListPublications([...listPublications, ...response.data.requested_data.data]);
+                setConfigPagination(response.data.requested_data.pagination);
+                setOffset(response.data.requested_data.pagination.next_page)
+                setLoading(false);
+                console.log(response.data.requested_data.data)
+            }, 1000);
 
          })
       .catch(error => {
@@ -158,6 +202,38 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
 
       });
 
+    }
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                if(offset != null) {
+
+                    CheckPublications()
+
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll)
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        };
+
+    }, [listPublications]);
+
+    const formatDate = (dataString) => {
+
+        const data = new Date(dataString)
+
+        const dia = data.getDate().toString().padStart(2, '0')
+
+        const mes = (data.getMonth() + 1).toString().padStart(2, '0')
+
+        const ano = data.getFullYear()
+
+        return `${dia}/${mes}/${ano}`
     }
 
     return (
@@ -181,11 +257,12 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
 
             <PublicationsSection>
                 {listPublications && listPublications.map(publication => (
+
                 <Publication key={publication.id}>
 
                     <ProfilePostSection>
                         <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" />
-                        <p>{userProp && userProp.username}</p>
+                        <p>{publication.username}</p>
                     </ProfilePostSection>
 
 
@@ -199,11 +276,13 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                     <CommentSection>
                             <p>0 comentário(s)</p>
                             <p>{'\u25CF'}</p>
-                            <p>XX/XX/XXXX</p>
+                            <p>{formatDate(publication.time_created)}</p>
                     </CommentSection>
                     
 
                 </Publication>))}
+                {offset === null && <Container><StyleIcon icon="maki:cinema" /></Container>}
+                {loading && <Container><Spinner></Spinner></Container>}
 
             </PublicationsSection>
         </>

@@ -198,6 +198,22 @@ const ButtonIcon = styled.button`
 
 `;
 
+const Container = styled.div`
+    display: flex;
+    justify-content: left;
+    font-size: 0.7rem;
+
+    p {
+        margin: 0.5rem;
+        margin-top: 0;
+    }
+
+    @media (min-width: 1025px) {
+        font-size: 1rem;
+    }
+
+`;
+
 export default function PostPreview() {
     const [title, setTitle] = useState('');
     const [publication, setPublication] = useState('');
@@ -207,7 +223,7 @@ export default function PostPreview() {
     const [message, setMessage] = useState('');
     const [user, setUser] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [listPublications, setListPublications] = useState([]);
+    const [dataPublication, setDataPublication] = useState([]);
     const [editPublication, setEditPublication] = useState(false);
 
 
@@ -316,22 +332,20 @@ export default function PostPreview() {
 
       const CheckPublications = (access_token) => {
 
-        axios.get('http://127.0.0.1:8080/posts', {
+        axios.get(`http://127.0.0.1:8080/posts/${UserPost}`, {
             headers: {
               'Authorization': `Bearer ${access_token}`
             }
           })
         .then(response => {
 
-            setListPublications(response.data.requested_data);
+            setTitle(response.data.requested_data.title)
+            setPublication(response.data.requested_data.publication)
 
-            const GetPost = response.data.requested_data.find(publication => publication.id == UserPost);
+            setSaveTitle(response.data.requested_data.title)
+            setSavePublication(response.data.requested_data.publication)
 
-            setTitle(GetPost.title)
-            setPublication(GetPost.publication)
-
-            setSaveTitle(GetPost.title)
-            setSavePublication(GetPost.publication)
+            setDataPublication(response.data.requested_data)
 
          })
       .catch(error => {
@@ -373,6 +387,20 @@ export default function PostPreview() {
 
         return null;
     }
+
+    const formatDate = (dataString) => {
+
+        const data = new Date(dataString)
+
+        const dia = data.getDate().toString().padStart(2, '0')
+
+        const mes = (data.getMonth() + 1).toString().padStart(2, '0')
+
+        const ano = data.getFullYear()
+
+        return `${dia}/${mes}/${ano}`
+    }
+
       
     if (title) {
     return (
@@ -461,10 +489,16 @@ export default function PostPreview() {
                           ) : (
                             <>
                                 <TitlePost>{title}</TitlePost>
+                                <Container>
+                                    <p>publicado em: {formatDate(dataPublication.time_created)}</p>
+                                    {dataPublication.time_updated &&  <p>última edição: {formatDate(dataPublication.time_updated)}</p>}
+                                </Container>
 
                                 <TextPost>{publication}</TextPost>
 
-                                <PostSettings>
+                                {dataPublication.username === user.username ? (
+                                    <>
+                                    <PostSettings>
                                     <button onClick={() => {setEditPublication(true); setMessage('');}}>
                                         <Icon icon="tabler:edit" style={{ color: '#535564', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
                                     </button>
@@ -472,18 +506,36 @@ export default function PostPreview() {
                                         <Icon icon="fluent:delete-16-filled" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
                                     </button>
                                 </PostSettings>
-
                                 <TitleComments>Seu Comentário</TitleComments>
 
                                 <FormSection>
 
-                                    <div><InputPost placeholder="Comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)} /></div>
-                                    <ButtonSection>
-                                        <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Publicar" />
-                                        { message && <ErrorMessage>{message}</ErrorMessage>}
-                                    </ButtonSection>
+                                <div><InputPost placeholder="Comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)} /></div>
+                                <ButtonSection>
+                                    <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Publicar" />
+                                    { message && <ErrorMessage>{message}</ErrorMessage>}
+                                </ButtonSection>
 
-                                </FormSection>
+                            </FormSection>
+                            </>
+                                ) : (
+                                    <>
+                                        <TitleComments>Seu Comentário</TitleComments>
+
+                                        <FormSection>
+
+                                        <div><InputPost placeholder="Comment" type="text" value={comment} onChange={(e) => setComment(e.target.value)} /></div>
+                                        <ButtonSection>
+                                            <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Publicar" />
+                                            { message && <ErrorMessage>{message}</ErrorMessage>}
+                                        </ButtonSection>
+
+                                    </FormSection>
+                                    </>
+                                )}
+                                
+
+                                
 
                             </>
                           )
