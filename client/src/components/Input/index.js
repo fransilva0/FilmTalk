@@ -11,7 +11,7 @@ const Input = styled.input`
     width: 100%;
 
     @media (min-width: 1025px) {
-      width: 50rem;
+      width: 25rem;
   }
 
 `;
@@ -45,6 +45,10 @@ const InputTitle = styled(Input)`
     border: none;
     background: transparent;
     box-shadow: 10px 10px 15px rgba(184, 64, 50, 0.5);
+
+    @media (min-width: 1025px) {
+        width: 50rem;
+    }
 `;
 
 export function InputUserForm({placeholder, type, value, onChange}) {

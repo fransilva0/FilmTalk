@@ -39,7 +39,6 @@ const ButtonSection = styled.section`
     display: flex;
     flex-direction: column;
     align-self: stretch;
-    width: 50%;
 
     @media (min-width: 1025px) {
    
