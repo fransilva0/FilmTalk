@@ -26,9 +26,13 @@ div {
     }
 }
 
-img  {
+
+
+`;
+
+const ImageStyle = styled(Image)`
+
     border-radius: 5rem;
-}
 
 `;
 
@@ -44,7 +48,7 @@ const Section = styled.section`
     justify-content: space-between;
 
     div {
-        width: 50%;
+        width: 100%;
         margin: 0.5rem;
         
     }
@@ -200,7 +204,8 @@ const ButtonIcon = styled.button`
 
 const Container = styled.div`
     display: flex;
-    justify-content: left;
+    justify-content: center;
+    align-items: center;
     font-size: 0.7rem;
 
     p {
@@ -411,7 +416,7 @@ export default function PostPreview() {
                     <div>
                         <p>{user && user.username}</p>
                     </div>
-                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="51" height="51" />
+                    <ImageStyle src={imgProfile} alt="image by Carter Baran, via Unsplash" width="51" height="51" />
                 </ProfileSection>
 
             </MainHeader>
@@ -490,8 +495,13 @@ export default function PostPreview() {
                             <>
                                 <TitlePost>{title}</TitlePost>
                                 <Container>
-                                    <p>publicado em: {formatDate(dataPublication.time_created)}</p>
-                                    {dataPublication.time_updated &&  <p>última edição: {formatDate(dataPublication.time_updated)}</p>}
+                                    
+                                    <ImageStyle src={imgProfile} alt="image by Carter Baran, via Unsplash" width="30" height="30" />
+                                    <p>{user && user.username}</p>
+                                    <p>&#124;</p>
+                                    <p>publicado: {formatDate(dataPublication.time_created)}</p>
+                                    {dataPublication.time_updated &&  <><p>&#124;</p> <p>editado: {formatDate(dataPublication.time_updated)}</p></>}
+                                
                                 </Container>
 
                                 <TextPost>{publication}</TextPost>
