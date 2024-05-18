@@ -18,9 +18,9 @@ def token_required(f):
         try:
             try:
                 data = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
+                current_user = userService.findUserById(data["id"])
             except:
                 raise Exception("Invalid Authentication token!",401)
-            current_user = userService.findUserById(data["id"])
         except Exception as err:
             if len(err.args) == 2:
                 return make_response(error_response(action=action,status="Unauthorized",error_message=err.args[0],error_code=err.args[1]))
