@@ -61,7 +61,7 @@ const StyledIcon = styled(Icon)`
 
 
 
-function index() {
+function Index() {
   return <>
     <HeaderHome />
     <Container>
@@ -82,4 +82,4 @@ function index() {
   </>
 }
 
-export default index
+export default Index
