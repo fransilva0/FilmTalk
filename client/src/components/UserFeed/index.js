@@ -192,7 +192,6 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                 setConfigPagination(response.data.requested_data.pagination);
                 setOffset(response.data.requested_data.pagination.next_page)
                 setLoading(false);
-                console.log(response.data.requested_data.data)
             }, 1000);
 
          })

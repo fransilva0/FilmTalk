@@ -8,7 +8,7 @@ import imgProfile from "../assets/img-profile.jpg";
 import { MainHeader } from "../components/Header";
 import { DefaultButton } from "../components/Button"
 import { ErrorMessage } from "../components/ErrorMessage"
-import { InputPublicationTitle, InputPublicationPost } from "../components/Input"
+import { InputPublicationTitle, InputPublicationPost, InputUserForm } from "../components/Input"
 import { Icon } from '@iconify/react';
 
 const ProfileSection = styled.section`
@@ -26,9 +26,13 @@ div {
     }
 }
 
-img  {
+
+
+`;
+
+const ImageStyle = styled(Image)`
+
     border-radius: 5rem;
-}
 
 `;
 
@@ -44,7 +48,7 @@ const Section = styled.section`
     justify-content: space-between;
 
     div {
-        width: 50%;
+        width: 100%;
         margin: 0.5rem;
         
     }
@@ -122,7 +126,7 @@ const ButtonSection = styled.section`
     display: flex;
     flex-direction: column;
     align-self: stretch;
-    width: 50%;
+    width: 100%;
 
     @media (min-width: 1025px) {
    
@@ -200,7 +204,8 @@ const ButtonIcon = styled.button`
 
 const Container = styled.div`
     display: flex;
-    justify-content: left;
+    justify-content: center;
+    align-items: center;
     font-size: 0.7rem;
 
     p {
@@ -211,6 +216,76 @@ const Container = styled.div`
     @media (min-width: 1025px) {
         font-size: 1rem;
     }
+
+`;
+
+const CommentSection = styled.section`
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 80vh;
+    overflow-x: hidden;
+    padding: 1rem;
+
+    &::-webkit-scrollbar {
+        display: none; 
+    }
+
+    -ms-overflow-style: none;  
+    scrollbar-width: none;
+
+`;
+
+const Comment = styled.div`
+
+background: transparent;
+padding: 1rem;
+display: flex;
+flex-direction: column;
+width: 100%;
+margin-top: 2rem; 
+box-shadow: -3px 3px 4px rgba(0, 0, 0, 0.25);
+
+
+`;
+
+const ProfileImage = styled(Image)`
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 0.5rem;
+`;
+
+const ProfilePostSection = styled.section`
+
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+
+`;
+
+const FooterComment = styled.div`
+
+margin-top: 10px;
+display: flex;
+align-items: center;
+color: #535564;
+font-size: 0.8rem;
+justify-content: left;
+
+p {
+    padding-right: 0.5rem;
+}
+
+button {
+    font-size: 0.8rem;
+    margin: 0;
+    margin-right: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
 
 `;
 
@@ -225,6 +300,13 @@ export default function PostPreview() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [dataPublication, setDataPublication] = useState([]);
     const [editPublication, setEditPublication] = useState(false);
+    const [editComment, setEditComment] = useState(false);
+    const [deletePublication, setDeletePublication] = useState(false);
+    const [deleteComment, setDeleteComment] = useState(false);
+    const [messageComment, setMessageComment] = useState('');
+    const [textComment, setTextComment] = useState('');
+
+
 
 
     const router = useRouter();
@@ -239,7 +321,15 @@ export default function PostPreview() {
                 EditConfirm();
                 setEditPublication(false);
             }
-        } else {
+        } else if (editComment) { 
+            if (textComment.trim() === '') {
+                setMessageComment('comentário não pode estar vazio');
+              } else {
+                setMessageComment("");
+                EditCommentConfirm();
+                setEditComment(false);
+            }
+        }else {
             if (comment.trim() === '') {
                 setMessage('comentário não pode ser vazio');
               } else {
@@ -247,6 +337,10 @@ export default function PostPreview() {
             }
         }
         
+      }
+
+      const EditCommentConfirm = () => {
+        {/*lógica de editar comentários aqui*/}
       }
 
       const EditConfirm = () => {
@@ -302,7 +396,7 @@ export default function PostPreview() {
       
       const handleConfirm = () => {
         
-        axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
+        if (deletePublication) {axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
             headers: {
               'Authorization': `Bearer ${user.token}`
             }
@@ -325,7 +419,9 @@ export default function PostPreview() {
     
             }
 
-          });
+          });} else {
+            {/* lógica de deletar comentários aqui */}
+          }
 
 
       }
@@ -411,19 +507,19 @@ export default function PostPreview() {
                     <div>
                         <p>{user && user.username}</p>
                     </div>
-                    <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="51" height="51" />
+                    <ImageStyle src={imgProfile} alt="image by Carter Baran, via Unsplash" width="51" height="51" />
                 </ProfileSection>
 
             </MainHeader>
 
-            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Confirmação de exclusão" 
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Post deletion confirmation" 
                 style={{
                     overlay: {
                         backgroundColor: 'rgba(0, 0, 0, 0.9)'
                     },
                     content: {
-                        width: '50%', 
-                        height: '50%', 
+                        width: '80%', 
+                        height: '80%', 
                         margin: 'auto',
                         backgroundColor: '#181818', 
                         color: '#fff',
@@ -432,7 +528,7 @@ export default function PostPreview() {
                     }
             }}>
 
-                <DeletePostPopup>
+                { deletePublication ? (<DeletePostPopup>
                     <h2>Tem certeza que deseja excluir esta publicação?</h2>
                     <div>
                         <ButtonIcon onClick={handleConfirm}>
@@ -453,7 +549,30 @@ export default function PostPreview() {
                         </ButtonIcon>
                     </div>
                     
+                </DeletePostPopup>) : (
+                    <DeletePostPopup>
+                    <h2>Tem certeza que deseja excluir este comentário?</h2>
+                    <div>
+                        <ButtonIcon onClick={handleConfirm}>
+                            <div>
+                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                            </div>
+                            <div>
+                                Confirmar
+                            </div>
+                        </ButtonIcon>
+                        <ButtonIcon onClick={closeModal}>
+                            <div>
+                                <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                            </div>
+                            <div>
+                                Cancelar
+                            </div>
+                        </ButtonIcon>
+                    </div>
+                    
                 </DeletePostPopup>
+                )}
 
             </Modal>
             <Section>
@@ -490,8 +609,13 @@ export default function PostPreview() {
                             <>
                                 <TitlePost>{title}</TitlePost>
                                 <Container>
-                                    <p>publicado em: {formatDate(dataPublication.time_created)}</p>
-                                    {dataPublication.time_updated &&  <p>última edição: {formatDate(dataPublication.time_updated)}</p>}
+                                    
+                                    <ImageStyle src={imgProfile} alt="image by Carter Baran, via Unsplash" width="30" height="30" />
+                                    <p>{user && user.username}</p>
+                                    <p>&#124;</p>
+                                    <p>publicado: {formatDate(dataPublication.time_created)}</p>
+                                    {dataPublication.time_updated &&  <><p>&#124;</p> <p>editado: {formatDate(dataPublication.time_updated)}</p></>}
+                                
                                 </Container>
 
                                 <TextPost>{publication}</TextPost>
@@ -502,7 +626,7 @@ export default function PostPreview() {
                                     <button onClick={() => {setEditPublication(true); setMessage('');}}>
                                         <Icon icon="tabler:edit" style={{ color: '#535564', fontSize: '2rem', marginRight: "1rem", padding: "0" }} />
                                     </button>
-                                    <button onClick={openModal}>
+                                    <button onClick={() => {openModal(); setDeleteComment(false); setDeletePublication(true);}}>
                                         <Icon icon="fluent:delete-16-filled" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
                                     </button>
                                 </PostSettings>
@@ -546,6 +670,53 @@ export default function PostPreview() {
                 <div>
 
                     <TitleComments>Comentários</TitleComments>
+                    <CommentSection>
+
+                        <Comment>
+
+                            <ProfilePostSection>
+                                <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" />
+                                <p>username</p>
+                            </ProfilePostSection>
+
+                            { editComment ? (
+
+                                <FormSection>
+
+                                <div><InputPublicationPost  type="text" value={textComment} onChange={(e) => setTextComment(e.target.value)} /></div>
+                                
+                                <ButtonSection>
+
+                                    <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Confirmar" />
+                                    <DefaultButton type="submit" onClick={() => {setEditComment(false); setMessageComment("");}} text="Cancelar" />
+
+                                </ButtonSection>
+
+                                { messageComment && <ErrorMessage>{messageComment}</ErrorMessage>}
+
+                                </FormSection>
+
+                            ) : (
+
+                                <>
+                                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget augue eu metus elementum condimentum ut ut ligula.</p>
+                                
+                                    <FooterComment>
+                                        <button onClick={() => {setEditComment(true); setMessage('');}}>Editar</button>
+                                        <p>{'\u25CF'}</p>
+                                        <button onClick={() => {openModal(); setDeletePublication(false); setDeleteComment(true);}}>Deletar</button>
+                                    </FooterComment>
+                                
+                                </>
+
+                            )}
+
+                                
+                            
+
+                        </Comment>
+
+                    </CommentSection>
 
                 </div>
             </>     
