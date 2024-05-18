@@ -18,10 +18,10 @@ class BaseRepository:
         db.session.delete(object)
         db.session.commit()
 
-    def get_by_id(self,id):
+    def getById(self,id):
         object = db.session.execute(db.select(self.model).filter_by(id=id)).scalar_one_or_none()
         return object
         
-    def get_all(self):
+    def getAll(self):
         list = db.session.scalars(db.select(self.model)).fetchmany()
         return list

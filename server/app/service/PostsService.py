@@ -1,7 +1,7 @@
 from app.model.Posts import Posts
 from app.schemas.PostsSchema import PostsSchema
 from app.repository.PostsRepository import PostsRepository
-from app.shared.util.api_methods import convert_rows_object_to_dict,paginate,convert_row_to_dict
+from app.shared.util.api_methods import convert_posts_userid_to_username,convert_post_userid_to_username
 
 postsSchema = PostsSchema()
 postsRepository = PostsRepository()
@@ -20,9 +20,7 @@ class PostsService:
         return
     
     def update_publication(self,user_id,post_id,title,publication):
-        post = postsRepository.get_by_id_scarlar(post_id)
-        if post == None:
-            raise Exception("Publicação não encontrada ou não existe!",404)
+        post = postsRepository.getById(post_id)
         if post.user_id != user_id:
             raise Exception("Você não tem permissão para editar esse post!", 403)
         post.title = title
@@ -31,38 +29,46 @@ class PostsService:
         return
     
     def delete_publication(self,user_id,post_id):
-        post = postsRepository.get_by_id_scarlar(id=post_id)
-        if post == None:
-            raise Exception("Publicação não encontrada ou não existe!",404)
+        post = postsRepository.getById(post_id)
         if post.user_id != user_id:
             raise Exception("Você não tem permissão para deletar esse post!", 403)
         postsRepository.delete(post)
         return
         
-    def find_publication_by_id(self,id):
-        post = postsRepository.get_by_id(id=id)
+    def find_Publication_By_Id(self,id):
+        post = postsRepository.getById(id)
         if post == None:
-            raise Exception("Publicação não encontrada ou não existe!",404)
-        post_dict = convert_row_to_dict(post)
-        return post_dict
-
-    def find_user_Publications_page(self,user_id,offset,limit):
-        posts = postsRepository.get_all_by_user_id(userId=user_id)
-        posts_dict = convert_rows_object_to_dict(posts)
-        page,pagination = paginate(offset=offset,limit=limit,list=posts_dict)
-        response = {
-            "data":page,
-            "pagination":pagination
-        }
+            raise Exception("Publicação não encontrado ou não existe!",404)
+        #comments = find_all_comments_by_post_id(post.id)
+        post = postsSchema.dump(post)
+        #post["comments"] = comments
+        response = convert_post_userid_to_username(post)
+        return response
+        
+    def findAllPublicationByUserId(self,user_id):
+        publications = postsRepository.getAllByUserId(user_id)
+        response = postsSchema.dump(publications,many=True)
+        if len(response) > 0:
+            for  publication in response:
+                publication.pop("user_id")
         return response
 
-    def find_publications_page(self,offset,limit):
-        posts = postsRepository.get_all_ordered_by_time_created()
-        posts_dict = convert_rows_object_to_dict(posts)
-        page,pagination = paginate(offset=offset,limit=limit,list=posts_dict)
-        response = {
-            "data":page,
-            "pagination":pagination
-        }
-        return response
+    def paginate_publications(self,offset,limit):
+        paginate = postsRepository.get_page_order_by_time_created(offset=offset,limit=limit)
+        if paginate == None:
+            raise Exception("Not Found",404)
+        else:
+            json_page = postsSchema.dump(paginate.items,many=True)
+            pagination = {
+                "total_records": paginate.total,
+                "current_page": paginate.page,
+                "total_pages": paginate.pages,
+                "next_page": paginate.next_num,
+                "prev_page": paginate.prev_num
+            }
+            response = {
+                "data" : convert_posts_userid_to_username(json_page=json_page),
+                "pagination" : pagination
+            }
+            return response
         
