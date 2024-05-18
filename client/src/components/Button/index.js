@@ -56,6 +56,7 @@ const Button = styled(ButtonregisterStyled)`
     position: relative;
     overflow: hidden;
     border: none;
+    margin: 0.5rem;
 
     &:hover {
       background-image: linear-gradient(90deg, #DF8271, #B84032);
