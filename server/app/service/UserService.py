@@ -23,19 +23,19 @@ class UserService:
 
     
     def findUserById(self,id):
-        user = userRepository.getById(id=id)
+        user = userRepository.get_by_id(id=id)
         if user == None:
             raise Exception("Usuário não encontrado ou não existe!",404)
         return user
     
     def findUserByUsername(self,username):
-        user = userRepository.getByUsername(username=username)
+        user = userRepository.get_by_username(username=username)
         if user == None:
             raise Exception("Usuário não encontrado ou não existe!",404)
         return user
     
     def findUserByEmail(self,email):
-        user = userRepository.getByEmail(email=email)
+        user = userRepository.get_by_email(email=email)
         if user == None:
             raise Exception("Usuário não encontrado ou não existe!",404)
         return user
@@ -43,7 +43,7 @@ class UserService:
 
     def validate_new_username(self,username):
         validate_username(username)
-        user = userRepository.getByUsername(username=username)
+        user = userRepository.get_by_username(username=username)
         if user != None:
             raise Exception("Esse Username já foi cadastrado!",409)
         pass
@@ -51,33 +51,39 @@ class UserService:
 
     def validate_new_email(self,email):
         validate_email(email)
-        user = userRepository.getByEmail(email=email)
+        user = userRepository.get_by_email(email=email)
         if user != None:
             raise Exception("Esse e-mail já foi cadastrado",409)
         pass
 
-
+    #TODO:adicionar funcionalidade de pedir a senha
     def update_username(self,user_id,username):
-        user = userRepository.getById(user_id)
+        user = userRepository.get_by_id(user_id)
+        if user == None:
+            raise Exception("Usuário não encontrado ou não existe!",404)
         user.username = username
         userRepository.update(user)
         return 
-    
+    #TODO:adicionar funcionalidade de pedir a senha 
     def update_email(self,user_id,email):
-        user = userRepository.getById(user_id)
+        user = userRepository.get_by_id(user_id)
+        if user == None:
+            raise Exception("Usuário não encontrado ou não existe!",404)
         user.email = email
         userRepository.update(user)
         return 
-    
+    #TODO:adicionar funcionalidade de pedir a senha anterior
     def update_password(self,user_id,password):
-        user = userRepository.getById(user_id)
+        user = userRepository.get_by_id(user_id)
+        if user == None:
+            raise Exception("Usuário não encontrado ou não existe!",404)
         user.password =  bcrypt.generate_password_hash(password).decode("utf-8")
         userRepository.update(user)
         return 
     
 
     def authenticate_user(self,username,password):
-        user = userRepository.getByUsername(username=username)
+        user = userRepository.get_by_username(username=username)
         if user == None:
             raise Exception("Usuário e/ou senha inválidos",401)
         if not bcrypt.check_password_hash(user.password, password):
