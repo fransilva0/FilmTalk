@@ -152,7 +152,7 @@ const PostSettings = styled.div`
 
 `;
 
-const DeletePostPopup = styled.section`
+const PostPopup = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -289,6 +289,29 @@ button {
 
 `;
 
+const Spinner = styled.span`
+
+width: 48px;
+height: 48px;
+border: 5px solid #DF8271;
+border-bottom-color: transparent;
+border-radius: 50%;
+display: inline-block;
+box-sizing: border-box;
+animation: rotation 1s linear infinite;
+margin: 1rem;
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
+    
+`;
+
 export default function PostPreview() {
     const [title, setTitle] = useState('');
     const [publication, setPublication] = useState('');
@@ -298,20 +321,51 @@ export default function PostPreview() {
     const [message, setMessage] = useState('');
     const [user, setUser] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalCommentIsOpen, setModalCommentIsOpen] = useState(false);
     const [dataPublication, setDataPublication] = useState([]);
     const [editPublication, setEditPublication] = useState(false);
-    const [editComment, setEditComment] = useState(false);
+    const [editComment, setEditComment] = useState([]);
     const [deletePublication, setDeletePublication] = useState(false);
     const [deleteComment, setDeleteComment] = useState(false);
     const [messageComment, setMessageComment] = useState('');
     const [textComment, setTextComment] = useState('');
-
-
-
+    const [offset, setOffset] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [listComments, setListComments] = useState([]);
+    const [configPagination, setConfigPagination] = useState([]);
 
     const router = useRouter();
 
     const { UserPost } = router.query
+
+    const access_token = user && user.token
+
+    useEffect(() => {
+        if (offset === 1) {
+            CheckComments(access_token);
+        }
+        
+    }, [offset]);
+
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                if(offset != null) {
+
+                    CheckComments(access_token)
+
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll)
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        };
+
+    }, [listComments]);
 
     const CheckEmptyEntry = () => {
         if (editPublication) {
@@ -321,26 +375,62 @@ export default function PostPreview() {
                 EditConfirm();
                 setEditPublication(false);
             }
-        } else if (editComment) { 
-            if (textComment.trim() === '') {
-                setMessageComment('comentário não pode estar vazio');
-              } else {
-                setMessageComment("");
-                EditCommentConfirm();
-                setEditComment(false);
-            }
-        }else {
+        } else {
             if (comment.trim() === '') {
                 setMessage('comentário não pode ser vazio');
               } else {
                   setMessage('')
+                  SendComment();
             }
         }
         
       }
 
+      const CheckEmptyEntryComment = () => { 
+            if (textComment.trim() === '') {
+                setMessageComment('comentário não pode estar vazio');
+              } else {
+                setMessageComment("");
+                EditCommentConfirm();
+            }
+        
+      }
+
       const EditCommentConfirm = () => {
-        {/*lógica de editar comentários aqui*/}
+
+        const editCommentData = editComment
+
+        const userDataJson = {
+            comment: textComment
+          };
+        
+        axios.put(`http://127.0.0.1:8080/comments/${editCommentData.id}`, userDataJson, {
+            headers: {
+              'Authorization': `Bearer ${user.token}`
+            }
+          })
+          .then(() => {
+
+            closeModalComment(false);
+            setListComments([])
+            setOffset(1)
+            
+          })
+          .catch((error) => {
+
+            if ((error.response && error.response.data && error.response.data.error_message)) {
+    
+              setMessage(error.response.data.error_message)
+    
+            } else {
+
+                return
+    
+            }
+
+          });
+        
+        
       }
 
       const EditConfirm = () => {
@@ -392,11 +482,21 @@ export default function PostPreview() {
 
       const closeModal = () => {
         setModalIsOpen(false);
+
+      }
+
+      const openModalComment = () => {
+        setModalCommentIsOpen(true);
+      }
+
+      const closeModalComment = () => {
+        setModalCommentIsOpen(false);
+
       }
       
       const handleConfirm = () => {
         
-        if (deletePublication) {axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
+        axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
             headers: {
               'Authorization': `Bearer ${user.token}`
             }
@@ -419,12 +519,9 @@ export default function PostPreview() {
     
             }
 
-          });} else {
-            {/* lógica de deletar comentários aqui */}
-          }
-
-
-      }
+          });
+    
+        }
 
       const CheckPublications = (access_token) => {
 
@@ -459,6 +556,32 @@ export default function PostPreview() {
       });
     }
 
+    const CheckComments = async (accessToken = access_token) => {
+
+        setLoading(true);
+        await axios.get(`http://127.0.0.1:8080/comments?post_id=${UserPost}&offset=${offset}`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          })
+        .then(response => {
+
+          setTimeout(() => {
+            setListComments([...listComments, ...response.data.requested_data.data]);
+            setConfigPagination(response.data.requested_data.pagination);
+            setOffset(response.data.requested_data.pagination.next_page)
+            setLoading(false);
+        }, 1000);
+
+         })
+      .catch(error => {
+
+        console.log(error.response.data.error_message)
+
+      });
+
+    }
+
       useEffect(() => {
 
         const loggedInUser = localStorage.getItem("user");
@@ -469,6 +592,7 @@ export default function PostPreview() {
 
           setUser(foundUser);
           CheckPublications(foundUser.token);
+          CheckComments(foundUser.token)
           
 
         } else {
@@ -495,6 +619,71 @@ export default function PostPreview() {
         const ano = data.getFullYear()
 
         return `${dia}/${mes}/${ano}`
+    }
+
+    const handleScroll = (event) => {
+        const element = event.target;
+        if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+            if(offset != null) {
+                CheckComments(access_token)
+            }
+        }
+    };
+
+
+    const SendComment = () => {
+
+        const userDataJson = {
+            comment: comment,
+            post_id: UserPost
+          };
+      
+          axios.post('http://127.0.0.1:8080/comments', userDataJson, {
+              headers: {
+                'Authorization': `Bearer ${access_token}`
+              }
+            })
+            .then(() => {
+
+              setComment('')
+              setListComments([])
+              setOffset(1)
+              
+            })
+            .catch((error) => {
+              if ((error.response)) {
+      
+                setMessage(error.response.data.error_message)
+      
+              }
+            });
+
+    }
+
+    const DeleteComment = () => {
+
+        const deleteCommentData = editComment
+
+        axios.delete(`http://127.0.0.1:8080/comments/${deleteCommentData.id}`, {
+              headers: {
+                'Authorization': `Bearer ${access_token}`
+              }
+            })
+            .then(() => {
+
+              setListComments([])
+              setOffset(1)
+              closeModal();
+              
+            })
+            .catch((error) => {
+              if ((error.response)) {
+      
+                setMessage(error.response.data.error_message)
+      
+              }
+            });
+        
     }
 
       
@@ -528,7 +717,7 @@ export default function PostPreview() {
                     }
             }}>
 
-                { deletePublication ? (<DeletePostPopup>
+                { deletePublication ? (<PostPopup>
                     <h2>Tem certeza que deseja excluir esta publicação?</h2>
                     <div>
                         <ButtonIcon onClick={handleConfirm}>
@@ -549,11 +738,11 @@ export default function PostPreview() {
                         </ButtonIcon>
                     </div>
                     
-                </DeletePostPopup>) : (
-                    <DeletePostPopup>
+                </PostPopup>) : (
+                    <PostPopup>
                     <h2>Tem certeza que deseja excluir este comentário?</h2>
                     <div>
-                        <ButtonIcon onClick={handleConfirm}>
+                        <ButtonIcon onClick={DeleteComment}>
                             <div>
                                 <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
@@ -571,9 +760,44 @@ export default function PostPreview() {
                         </ButtonIcon>
                     </div>
                     
-                </DeletePostPopup>
+                </PostPopup>
                 )}
 
+            </Modal>
+
+            <Modal isOpen={modalCommentIsOpen} onRequestClose={closeModalComment} contentLabel="Post deletion confirmation" 
+                style={{
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)'
+                    },
+                    content: {
+                        width: '80%', 
+                        height: '80%', 
+                        margin: 'auto',
+                        backgroundColor: '#fff', 
+                        color: '#fff',
+                        border: 'none'
+                    
+                    }
+            }}>
+
+                
+                    <PostPopup>
+                        <FormSection>
+
+                            <div><InputPublicationPost  type="text" value={textComment} onChange={(e) => setTextComment(e.target.value)} /></div>
+
+                            <ButtonSection>
+
+                                <DefaultButton type="submit" onClick={CheckEmptyEntryComment} text="Confirmar" />
+                                <DefaultButton type="submit" onClick={() => {setMessageComment(""); closeModalComment(false)}} text="Cancelar" />
+
+                            </ButtonSection>
+
+                            { messageComment && <ErrorMessage>{messageComment}</ErrorMessage>}
+
+                        </FormSection>
+                    </PostPopup>
             </Modal>
             <Section>
                 <>
@@ -670,51 +894,37 @@ export default function PostPreview() {
                 <div>
 
                     <TitleComments>Comentários</TitleComments>
-                    <CommentSection>
 
+                    <CommentSection onScroll={handleScroll} style={{ maxHeight: '80vh', overflow: 'auto' }}>
+
+                        {listComments && listComments.map(comment => (
                         <Comment>
 
                             <ProfilePostSection>
                                 <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" />
-                                <p>username</p>
+                                <p>{comment.username}</p>
                             </ProfilePostSection>
 
-                            { editComment ? (
-
-                                <FormSection>
-
-                                <div><InputPublicationPost  type="text" value={textComment} onChange={(e) => setTextComment(e.target.value)} /></div>
                                 
-                                <ButtonSection>
-
-                                    <DefaultButton type="submit" onClick={CheckEmptyEntry} text="Confirmar" />
-                                    <DefaultButton type="submit" onClick={() => {setEditComment(false); setMessageComment("");}} text="Cancelar" />
-
-                                </ButtonSection>
-
-                                { messageComment && <ErrorMessage>{messageComment}</ErrorMessage>}
-
-                                </FormSection>
-
-                            ) : (
-
-                                <>
-                                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget augue eu metus elementum condimentum ut ut ligula.</p>
+                                    <p>{comment.commentary}</p>
                                 
-                                    <FooterComment>
-                                        <button onClick={() => {setEditComment(true); setMessage('');}}>Editar</button>
-                                        <p>{'\u25CF'}</p>
-                                        <button onClick={() => {openModal(); setDeletePublication(false); setDeleteComment(true);}}>Deletar</button>
-                                    </FooterComment>
-                                
-                                </>
+                                    
+                                        {comment.username === user.username ? (
+                                            <FooterComment>
+                                                <button onClick={() => {openModalComment(); setMessage(''); setEditComment(comment); setTextComment(comment.commentary)}}>Editar</button>
+                                                <p>{'\u25CF'}</p>
+                                                <button onClick={() => {openModal(); setDeletePublication(false); setDeleteComment(true); setEditComment(comment);}}>Deletar</button>
+                                                <p>{'\u25CF'}</p>
+                                                <p>{formatDate(comment.time_created)}</p>
+                                            </FooterComment>
+                                        ) : (
+                                            <FooterComment>
+                                                <p>{formatDate(comment.time_created)}</p>
+                                            </FooterComment>
+                                        )}
 
-                            )}
-
-                                
-                            
-
-                        </Comment>
+                        </Comment>))}
+                        {loading && <Container><Spinner></Spinner></Container>}
 
                     </CommentSection>
 
