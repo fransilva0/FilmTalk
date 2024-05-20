@@ -23,5 +23,7 @@ def create_app():
     app.register_blueprint(user_bp)
     from app.routes.PostsRoutes import posts_bp
     app.register_blueprint(posts_bp)
+    from app.routes.CommentsRoutes import comments_bp
+    app.register_blueprint(comments_bp)
     
     return app

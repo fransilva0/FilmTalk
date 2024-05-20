@@ -1,6 +1,5 @@
 import React,{ useState, useEffect }  from "react"
 import styled from 'styled-components';
-import { Icon } from '@iconify/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { DefaultButton } from "../Button"
@@ -42,6 +41,16 @@ const PublicationsSection = styled.section`
 
     padding: 1rem;
     padding-top: 4rem;
+
+    max-height: 80vh;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      display: none; 
+  }
+
+  -ms-overflow-style: none;  
+  scrollbar-width: none;
 
     h2 {
         border-bottom: 1px solid #535564;
@@ -92,15 +101,57 @@ const CommentSection = styled.div`
 
 `;
 
+const Container = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
+const Spinner = styled.span`
+
+width: 48px;
+height: 48px;
+border: 5px solid #DF8271;
+border-bottom-color: transparent;
+border-radius: 50%;
+display: inline-block;
+box-sizing: border-box;
+animation: rotation 1s linear infinite;
+margin: 1rem;
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
+    
+`;
+
+
+
+
 export function UserPosts ({ userProp, setUserProp }) {
     const [title, setTitle] = useState('');
     const [publication, setPublication] = useState('');
     const [message, setMessage] = useState('');
     const [listPublications, setListPublications] = useState([]);
 
+    const [configPagination, setConfigPagination] = useState([]);
+    const [offset, setOffset] = useState(1);
+    const [loading, setLoading] = useState(false);
+
     const router = useRouter()
 
     const access_token = userProp && userProp.token
+
+    useEffect(() => {
+      if (offset === 1) {
+          CheckPublications();
+      }
+      
+  }, [offset]);
 
     useEffect(() => {
         
@@ -108,16 +159,22 @@ export function UserPosts ({ userProp, setUserProp }) {
 
       }, []);
 
-    const CheckPublications = () => {
+    const CheckPublications = async () => {
 
-        axios.get('http://127.0.0.1:8080/posts', {
+        setLoading(true);
+        await axios.get(`http://127.0.0.1:8080/posts?offset=${offset}`, {
             headers: {
               'Authorization': `Bearer ${access_token}`
             }
           })
         .then(response => {
 
-            setListPublications(response.data.requested_data);
+          setTimeout(() => {
+            setListPublications([...listPublications, ...response.data.requested_data.data]);
+            setConfigPagination(response.data.requested_data.pagination);
+            setOffset(response.data.requested_data.pagination.next_page)
+            setLoading(false);
+        }, 1000);
 
          })
       .catch(error => {
@@ -127,6 +184,34 @@ export function UserPosts ({ userProp, setUserProp }) {
       });
 
     }
+
+    useEffect(() => {
+      const handleScroll = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            if(offset != null) {
+
+                CheckPublications()
+
+            }
+        }
+    };
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+        window.removeEventListener('scroll', handleScroll)
+    };
+
+  }, [listPublications]);
+
+    const handleScroll = (event) => {
+      const element = event.target;
+      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+          if(offset != null) {
+              CheckPublications()
+          }
+      }
+  };
 
     const CheckEmptyEntry = () => {
         if (title.trim() === '' || publication.trim() === '') {
@@ -149,10 +234,11 @@ export function UserPosts ({ userProp, setUserProp }) {
               'Authorization': `Bearer ${access_token}`
             }
           })
-          .then((response) => {
+          .then(() => {
             setTitle('');
             setPublication('');
-            CheckPublications();
+            setListPublications([])
+            setOffset(1)
             
           })
           .catch((error) => {
@@ -164,6 +250,19 @@ export function UserPosts ({ userProp, setUserProp }) {
           });
     
       }
+
+      const formatDate = (dataString) => {
+
+        const data = new Date(dataString)
+
+        const dia = data.getDate().toString().padStart(2, '0')
+
+        const mes = (data.getMonth() + 1).toString().padStart(2, '0')
+
+        const ano = data.getFullYear()
+
+        return `${dia}/${mes}/${ano}`
+    }
 
     return (
         <GeneralDiv>
@@ -177,7 +276,7 @@ export function UserPosts ({ userProp, setUserProp }) {
                 
             </FormSection>
 
-            <PublicationsSection>
+            <PublicationsSection onScroll={handleScroll} style={{ maxHeight: '80vh', overflow: 'auto' }}>
                 <h2>Minhas Postagens</h2>
 
                 {listPublications && listPublications.map(publication => (
@@ -190,10 +289,11 @@ export function UserPosts ({ userProp, setUserProp }) {
                     <CommentSection>
                         <p>0 comentário(s)</p>
                         <p>{'\u25CF'}</p>
-                        <p>XX/XX/XXXX</p>
+                        <p>{formatDate(publication.time_created)}</p>
                     </CommentSection>
 
                 </Publication>))}
+                {loading && <Container><Spinner></Spinner></Container>}
 
             </PublicationsSection>
         </GeneralDiv>
