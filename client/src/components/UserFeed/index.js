@@ -5,11 +5,30 @@ import Image from 'next/image';
 import styled from 'styled-components';
 import imgProfile from "../../assets/img-profile.jpg";
 import { Icon } from '@iconify/react';
+import { FavoriteUsers } from "../FavoriteUsers";
 
 
 const Container = styled.div`
     display: flex;
     justify-content: center;
+`;
+
+const GeneralContainer = styled.section`
+
+display: flex;
+flex-direction: column;
+
+@media (min-width: 1025px) {
+    flex-direction: row;
+
+    div {
+   
+        width: 100%;
+    }
+    
+}
+
+
 `;
 
 const ProfileSection = styled.section`
@@ -236,7 +255,11 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
     }
 
     return (
-        <>
+        <GeneralContainer>
+
+            <FavoriteUsers />
+
+            <div>
             <Container>
                 <ProfileSection>
 
@@ -284,6 +307,7 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                 {loading && <Container><Spinner></Spinner></Container>}
 
             </PublicationsSection>
-        </>
+            </div>
+        </GeneralContainer>
     )
 }
