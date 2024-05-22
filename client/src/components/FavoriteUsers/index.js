@@ -8,29 +8,35 @@ import imgProfile from "../../assets/img-profile.jpg";
 
 const SectionFavorite = styled.section`
 
-display: flex;
-flex-direction: column;
-padding: 1rem;
-margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: 1rem;
 
-h2 {
-    border-bottom: 1px solid #535564;
-    color: #535564;
-    padding-bottom: 1rem;
-    font-size: 1rem;
-}
+    h2 {
+        border-bottom: 1px solid #535564;
+        color: #535564;
+        padding-bottom: 1rem;
+        font-size: 1rem;
+    }
 
 
-@media (min-width: 1025px) {
+    @media (min-width: 1025px) {
 
-    width: 20%;
-}
+        width: 20%;
+    }
 
 `;
 
 const SectionCards = styled.div`
 
     overflow-x: hidden;
+    overflow: auto;
+    margin-top: 1rem;
+    max-height: 25vh;
+
+    background: transparent;
+    box-shadow: -10px 10px 15px rgba(184, 64, 50, 0.5);
 
 
     &::-webkit-scrollbar {
@@ -40,7 +46,11 @@ const SectionCards = styled.div`
     -ms-overflow-style: none;  
     scrollbar-width: none;
 
+    @media (min-width: 1025px) {
 
+        max-height: 40vh;
+
+    }
 
 `;
 
@@ -84,7 +94,7 @@ export function FavoriteUsers() {
         <SectionFavorite>
             <h2>Para Acompanhar</h2>
 
-            <SectionCards onScroll={handleScroll} style={{ maxHeight: '40vh', overflow: 'auto' }}>
+            <SectionCards onScroll={handleScroll} >
                 <UserCard>
                     <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                     <p>username</p>
