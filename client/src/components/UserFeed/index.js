@@ -81,6 +81,7 @@ const Button = styled.button`
 const PublicationsSection = styled.section`
 
     padding: 1rem;
+    padding-top: 0;
     padding-top: 4rem;
 
 
@@ -181,11 +182,40 @@ const StyleIcon = styled(Icon)`
 
 `;
 
+const NavbarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 1025px) {
+
+    display: ${props => props.hide ? 'none' : 'flex'};
+
+
+  }
+
+`;
+
+const NavbarButton = styled.button`
+  background: transparent;
+  border: none;
+  color: ${props => props.isActive ? '#B84032' : '#535564'};
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+`;
+
+
 export function UserFeed ({ userProp, setUserProp, setScreen }) {
     const [listPublications, setListPublications] = useState([]);
     const [configPagination, setConfigPagination] = useState([]);
     const [offset, setOffset] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [activeButton, setActiveButton] = useState('feed');
+    const [visibleFeed, setVisibleFeed] = useState(true)
+
+    const handleClick = (buttonName) => {
+        setActiveButton(buttonName);
+    }
     
     const router = useRouter()
     const access_token = userProp && userProp.token
@@ -257,7 +287,7 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
     return (
         <GeneralContainer>
 
-            <FavoriteUsers />
+            <FavoriteUsers hideOnMobile={true} />
 
             <div>
             <Container>
@@ -277,7 +307,27 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                 </ProfileSection>
             </Container>
 
-            <PublicationsSection>
+            <NavbarContainer hide={true}>
+
+                <NavbarButton
+                    isActive={activeButton === 'feed'}
+                    onClick={() => {handleClick('feed'); setVisibleFeed(true)}}
+                >
+                    Para você
+                </NavbarButton>
+      
+                <NavbarButton
+                    isActive={activeButton === 'connections'}
+                    onClick={() => {handleClick('connections'); setVisibleFeed(false)}}
+                >
+                    Conexões
+                </NavbarButton>
+    
+            </NavbarContainer>
+
+            
+            {visibleFeed ? (
+                <PublicationsSection>
                 {listPublications && listPublications.map(publication => (
 
                 <Publication key={publication.id}>
@@ -307,6 +357,12 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                 {loading && <Container><Spinner></Spinner></Container>}
 
             </PublicationsSection>
+            ) : (
+                <Container>
+                    <FavoriteUsers hideOnMobile={false} hideBoxShadow={true} hideTitleSection={true} expandHeight={true} />
+                </Container>
+            )}
+            
             </div>
         </GeneralContainer>
     )

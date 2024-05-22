@@ -8,7 +8,7 @@ import imgProfile from "../../assets/img-profile.jpg";
 
 const SectionFavorite = styled.section`
 
-    display: flex;
+    display: ${props => props.hideOnMobile ? 'none' : 'flex'};
     flex-direction: column;
     padding: 1rem;
     margin: 1rem;
@@ -18,12 +18,14 @@ const SectionFavorite = styled.section`
         color: #535564;
         padding-bottom: 1rem;
         font-size: 1rem;
+        display: ${props => props.hideTitleSection ? 'none' : 'flex'};
     }
 
 
     @media (min-width: 1025px) {
-
-        width: 20%;
+        
+        display: flex;
+        width: 30%;
     }
 
 `;
@@ -33,10 +35,11 @@ const SectionCards = styled.div`
     overflow-x: hidden;
     overflow: auto;
     margin-top: 1rem;
-    max-height: 25vh;
+    max-height: ${props => props.expandHeight ? '100%' : '25vh'};
 
     background: transparent;
-    box-shadow: -10px 10px 15px rgba(184, 64, 50, 0.5);
+    box-shadow: ${props => props.hideBoxShadow ? 'none' : 'rgba(184, 64, 50, 0.5) 0px 25px 50px -12px'};
+    
 
 
     &::-webkit-scrollbar {
@@ -49,6 +52,7 @@ const SectionCards = styled.div`
     @media (min-width: 1025px) {
 
         max-height: 40vh;
+        
 
     }
 
@@ -77,8 +81,17 @@ const ProfileImage = styled(Image)`
     margin-right: 0.5rem;
 `;
 
+const LinkFollow = styled.p`
 
-export function FavoriteUsers() {
+font-size: 0.8rem;
+color: #B84032;
+
+`;
+
+
+
+
+export function FavoriteUsers({ hideOnMobile, hideBoxShadow, hideTitleSection, expandHeight }) {
 
     const handleScroll = (event) => {
         const element = event.target;
@@ -91,13 +104,16 @@ export function FavoriteUsers() {
 
 
     return (
-        <SectionFavorite>
+        <SectionFavorite hideOnMobile={hideOnMobile} hideTitleSection={hideTitleSection}>
             <h2>Para Acompanhar</h2>
 
-            <SectionCards onScroll={handleScroll} >
+            <SectionCards onScroll={handleScroll} hideBoxShadow={hideBoxShadow} expandHeight={expandHeight} >
                 <UserCard>
                     <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
-                    <p>username</p>
+                    <div>
+                        <p>username</p>
+                        <LinkFollow>ver perfil</LinkFollow>
+                    </div>
                 </UserCard>
 
                 <UserCard>
