@@ -4,8 +4,9 @@ import { HeaderLoginLogout } from "../components/Header"
 import { DefaultButton } from "../components/Button"
 import { InputUserForm } from "../components/Input"
 import { ErrorMessage } from "../components/ErrorMessage"
-import axios from 'axios';
 import { FormSection, Container, ButtonSection} from "../styles/registerStyled"
+import { registerUser } from "../api/user";
+
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -46,23 +47,17 @@ export default function Register() {
 
     if (isValidEmail) {
       setMessage('')
-      DataJSON();
+      RegisterUser();
     } else {
       setMessage('Por favor, insira um email válido.');
     }
 
   }
 
-  const DataJSON = () => {
+  const RegisterUser = () => {
 
-    const userDataJson = {
-      username: username,
-      email: email,
-      password: password
-    };
-
-    axios.post('http://127.0.0.1:8080/users', userDataJson)
-      .then((response) => {
+    registerUser(username, email, password)
+      .then(() => {
         setUsername('');
         setEmail('');
         setPassword('');

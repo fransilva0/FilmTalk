@@ -1,10 +1,11 @@
 import React,{ useState, useEffect }  from "react"
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import { DefaultButton } from "../Button"
 import { ErrorMessage } from "../ErrorMessage"
 import { InputPublicationTitle, InputPublicationPost } from "../Input"
 import { GeneralDiv, FormSection, ButtonSection, PublicationsSection, Publication, CommentSection, Container, Spinner } from "./style"
+import { checkPostsFeed } from "../../api/feeds";
+import {userCreatePublication } from "../../api/publications";
 
 export function UserPosts ({ userProp, setUserProp }) {
     const [title, setTitle] = useState('');
@@ -36,11 +37,7 @@ export function UserPosts ({ userProp, setUserProp }) {
     const CheckPublications = async () => {
 
         setLoading(true);
-        await axios.get(`http://127.0.0.1:8080/posts?offset=${offset}`, {
-            headers: {
-              'Authorization': `Bearer ${access_token}`
-            }
-          })
+        await checkPostsFeed(offset, access_token)
         .then(response => {
 
           setTimeout(() => {
@@ -92,22 +89,13 @@ export function UserPosts ({ userProp, setUserProp }) {
           setMessage('existem campos vazios');
         } else {
             setMessage('')
-            DataJSON()
+            PostsFeed()
         }
       }
 
-      const DataJSON = () => {
+      const PostsFeed = () => {
 
-        const userDataJson = {
-          title: title,
-          publication: publication
-        };
-    
-        axios.post('http://127.0.0.1:8080/posts', userDataJson, {
-            headers: {
-              'Authorization': `Bearer ${access_token}`
-            }
-          })
+        userCreatePublication(title, publication, access_token)
           .then(() => {
             setTitle('');
             setPublication('');

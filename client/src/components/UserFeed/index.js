@@ -1,6 +1,6 @@
 import React,{ useState, useEffect }  from "react";
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import { generalUserFeed } from "../../api/feeds";
 import Image from 'next/image';
 import imgProfile from "../../assets/img-profile.jpg";
 import { FavoriteUsers } from "../FavoriteUsers";
@@ -31,11 +31,7 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
     const CheckPublications = async () => {
 
         setLoading(true);
-        await axios.get(`http://127.0.0.1:8080/posts/page?offset=${offset}`, {
-            headers: {
-              'Authorization': `Bearer ${access_token}`
-            }
-          })
+        await generalUserFeed(offset, access_token)
         .then(response => {
 
             setTimeout(() => {

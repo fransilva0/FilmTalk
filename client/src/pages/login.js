@@ -4,7 +4,7 @@ import { HeaderLoginLogout } from "../components/Header"
 import { DefaultButton } from "../components/Button"
 import { InputUserForm } from "../components/Input"
 import { ErrorMessage } from "../components/ErrorMessage"
-import axios from 'axios';
+import { loginUser } from "../api/user";
 import { FormSection, Container, ButtonSection} from "../styles/loginStyled"
 
 export default function Login() {
@@ -19,18 +19,13 @@ export default function Login() {
     if (username.trim() === '' || password.trim() === '' ) {
       setMessage('existem campos vazios');
     } else {
-      DataJSON();
+      LoginUser();
     }
   }
 
-  const DataJSON = () => {
+  const LoginUser = () => {
 
-    const userDataJson = {
-      username: username,
-      password: password
-    };
-
-    axios.post('http://127.0.0.1:8080/users/login', userDataJson)
+    loginUser(username, password)
       .then((response) => {
         setUsername('');
         setPassword('');

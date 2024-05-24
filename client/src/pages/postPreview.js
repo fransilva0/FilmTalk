@@ -11,6 +11,9 @@ import { InputPublicationTitle, InputPublicationPost } from "../components/Input
 import { Icon } from '@iconify/react';
 import { ProfileSection, ImageStyle, Section, TitlePost, TitleComments, TextPost, FormSection, InputPost, ButtonSection, PostSettings, 
     PostPopup, ButtonIcon, Container, CommentSection, Comment, ProfileImage, ProfilePostSection, FooterComment, Spinner } from "../styles/postPreviewStyled"
+import { userEditPublication, userDeletePublication, viewPublication } from "../api/publications";
+import { userCreateComment, userDeleteComment, userEditComment, viewComments } from "../api/comments";
+
 
 export default function PostPreview() {
     const [title, setTitle] = useState('');
@@ -98,17 +101,7 @@ export default function PostPreview() {
 
       const EditCommentConfirm = () => {
 
-        const editCommentData = editComment
-
-        const userDataJson = {
-            comment: textComment
-          };
-        
-        axios.put(`http://127.0.0.1:8080/comments/${editCommentData.id}`, userDataJson, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          })
+        userEditComment(editComment, textComment, user.token)
           .then(() => {
 
             closeModalComment(false);
@@ -135,16 +128,7 @@ export default function PostPreview() {
 
       const EditConfirm = () => {
 
-        const userDataJson = {
-            title: title,
-            publication: publication
-          };
-        
-        axios.put(`http://127.0.0.1:8080/posts/${UserPost}`, userDataJson, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          })
+        userEditPublication(title, publication, UserPost, access_token)
           .then(() => {
 
             return
@@ -196,11 +180,7 @@ export default function PostPreview() {
       
       const handleConfirm = () => {
         
-        axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          })
+        userDeletePublication(UserPost, user.token) 
           .then(() => {
 
             closeModal();
@@ -225,11 +205,7 @@ export default function PostPreview() {
 
       const CheckPublications = (access_token) => {
 
-        axios.get(`http://127.0.0.1:8080/posts/${UserPost}`, {
-            headers: {
-              'Authorization': `Bearer ${access_token}`
-            }
-          })
+        viewPublication(UserPost, access_token)
         .then(response => {
 
             setTitle(response.data.requested_data.title)
@@ -259,11 +235,7 @@ export default function PostPreview() {
     const CheckComments = async (accessToken = access_token) => {
 
         setLoading(true);
-        await axios.get(`http://127.0.0.1:8080/comments?post_id=${UserPost}&offset=${offset}`, {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`
-            }
-          })
+        await viewComments(UserPost, offset, accessToken)
         .then(response => {
 
           setTimeout(() => {
@@ -333,16 +305,7 @@ export default function PostPreview() {
 
     const SendComment = () => {
 
-        const userDataJson = {
-            comment: comment,
-            post_id: UserPost
-          };
-      
-          axios.post('http://127.0.0.1:8080/comments', userDataJson, {
-              headers: {
-                'Authorization': `Bearer ${access_token}`
-              }
-            })
+        userCreateComment(comment, UserPost, access_token)
             .then(() => {
 
               setComment('')
@@ -362,13 +325,7 @@ export default function PostPreview() {
 
     const DeleteComment = () => {
 
-        const deleteCommentData = editComment
-
-        axios.delete(`http://127.0.0.1:8080/comments/${deleteCommentData.id}`, {
-              headers: {
-                'Authorization': `Bearer ${access_token}`
-              }
-            })
+        userDeleteComment(editComment, access_token)
             .then(() => {
 
               setListComments([])

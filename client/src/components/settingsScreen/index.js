@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Modal from 'react-modal';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
+import { modifyUserData } from "../../api/user";
 import { DefaultButton } from "../Button"
 import { InputUserForm } from "../Input"
 import { ErrorMessage } from "../ErrorMessage"
@@ -77,15 +78,8 @@ export function SettingsScreen ({setScreen}) {
 
 
     const UpdateUserData = (field, value) => {
-      const userDataJson = {
-        [field]: value
-      };
-    
-      axios.patch('http://127.0.0.1:8080/users', userDataJson, {
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
-      })
+      
+      modifyUserData(field, value, user.token)
         .then(() => {
           if ([field] != "password") {
 
