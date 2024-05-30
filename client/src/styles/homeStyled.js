@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import Link from 'next/link';
 
 
 export const ProfileSection = styled.section`

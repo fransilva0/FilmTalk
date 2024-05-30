@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 
-export const SectionFavorite = styled.section`
+export const MovieSection = styled.section`
 
     display: ${props => props.hideOnMobile ? 'none' : 'flex'};
     flex-direction: column;
@@ -31,6 +31,8 @@ export const SectionFavorite = styled.section`
 export const SectionCards = styled.div`
 
     overflow-x: hidden;
+    display: flex;
+    flex-wrap: wrap;
     overflow: auto;
     margin-top: 1rem;
     max-height: ${props => props.expandHeight ? '100%' : '25vh'};
@@ -53,32 +55,19 @@ export const SectionCards = styled.div`
 
 `;
 
-export const UserCard = styled.section`
+export const MovieCard = styled.section`
 
     display: flex;
     align-items: center;
     padding: 0.5rem;
     margin: 0.5rem;
 
-    @media (min-width: 1025px) {
-
-        width: 100%;
-    }
-
 
 
 `;
 
-export const ProfileImage = styled(Image)`
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+export const MovieImage = styled(Image)`
+    width: 100px;
+    height: 100px;
     margin-right: 0.5rem;
-`;
-
-export const LinkFollow = styled.p`
-
-font-size: 0.8rem;
-color: #B84032;
-
 `;
