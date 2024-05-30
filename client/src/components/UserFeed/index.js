@@ -1,13 +1,17 @@
 import React,{ useState, useEffect }  from "react";
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { generalUserFeed } from "../../api/feeds";
 import Image from 'next/image';
 import imgProfile from "../../assets/img-profile.jpg";
-import { FavoriteUsers } from "../FavoriteUsers";
+import { SectionAllUsers } from "../SectionAllUsers";
 import { Container, GeneralContainer, ProfileSection, StyledIcon, Button, PublicationsSection, Publication, ProfileImage, 
     ProfilePostSection, CommentSection, Spinner, StyleIcon, NavbarContainer, NavbarButton} from "./style"
+import { PostFormPopup } from "../PostFormPopup";
+
 
 export function UserFeed ({ userProp, setUserProp, setScreen }) {
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const [listPublications, setListPublications] = useState([]);
     const [configPagination, setConfigPagination] = useState([]);
     const [offset, setOffset] = useState(1);
@@ -82,10 +86,19 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
         return `${dia}/${mes}/${ano}`
     }
 
+    const openModal = () => {
+        setModalIsOpen(true);
+      }
+  
+      const closeModal = () => {
+        setModalIsOpen(false);
+      }
+
     return (
         <GeneralContainer>
 
-            <FavoriteUsers hideOnMobile={true} />
+            <SectionAllUsers hideOnMobile={true} TitleSection={"Sugestões de Conexões"} />
+            <PostFormPopup isOpen={modalIsOpen} onRequestClose={closeModal} />
 
             <div>
             <Container>
@@ -93,9 +106,10 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
 
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                     <div>
-
-                        <p>{userProp && userProp.username}</p>
-                        <Button onClick={() => setScreen('PublicationsProfile')}>
+                        <Link href="/profile" style={{ textDecoration: 'none' }}>
+                            <p>{userProp && userProp.username}</p>
+                        </Link>
+                        <Button onClick={openModal}>
                             <StyledIcon icon="tabler:edit" />
                             <p>Criar uma Publicação</p>
                         </Button>
@@ -118,7 +132,7 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
                     isActive={activeButton === 'connections'}
                     onClick={() => {handleClick('connections'); setVisibleFeed(false)}}
                 >
-                    Conexões
+                    Para se conectar
                 </NavbarButton>
     
             </NavbarContainer>
@@ -157,7 +171,7 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
             </PublicationsSection>
             ) : (
                 <Container>
-                    <FavoriteUsers hideOnMobile={false} hideBoxShadow={true} hideTitleSection={true} expandHeight={true} />
+                    <SectionAllUsers hideOnMobile={false} hideBoxShadow={true} hideTitleSection={true} expandHeight={true} />
                 </Container>
             )}
             

@@ -1,6 +1,5 @@
 import React,{ useState, useEffect }  from "react";
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import Modal from 'react-modal';
 import Image from 'next/image';
 import imgProfile from "../assets/img-profile.jpg";

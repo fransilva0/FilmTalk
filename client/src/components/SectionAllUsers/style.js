@@ -6,6 +6,7 @@ export const SectionFavorite = styled.section`
     display: ${props => props.hideOnMobile ? 'none' : 'flex'};
     flex-direction: column;
     padding: 1rem;
+    margin: 1rem;
 
     h2 {
         border-bottom: 1px solid #535564;
@@ -19,11 +20,7 @@ export const SectionFavorite = styled.section`
     @media (min-width: 1025px) {
         
         display: flex;
-        margin-right: 4rem;
-        width: 50vh;
-        box-shadow: rgba(184, 64, 50, 0.5) 0px 25px 50px -12px;
-        margin-bottom: 2rem;
-
+        width: 30%;
     }
 
 `;
@@ -34,7 +31,9 @@ export const SectionCards = styled.div`
     overflow: auto;
     margin-top: 1rem;
     max-height: ${props => props.expandHeight ? '100%' : '25vh'};
+
     background: transparent;
+    box-shadow: ${props => props.hideBoxShadow ? 'none' : 'rgba(184, 64, 50, 0.5) 0px 25px 50px -12px'};
     
 
 
@@ -46,8 +45,9 @@ export const SectionCards = styled.div`
     scrollbar-width: none;
 
     @media (min-width: 1025px) {
-        
+
         max-height: 40vh;
+        
 
     }
 

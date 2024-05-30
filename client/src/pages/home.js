@@ -1,4 +1,5 @@
 import React,{ useState, useEffect }  from "react";
+import Link from 'next/link';
 import { CSSTransition } from 'react-transition-group';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -96,7 +97,9 @@ export default function Home() {
                     <ProfileSection>
 
                         <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
-                        <p>{user && user.username}</p>
+                        <Link href="/profile" style={{ textDecoration: 'none' }}>
+                            <p>{user && user.username}</p>
+                        </Link>
 
                     </ProfileSection>
 

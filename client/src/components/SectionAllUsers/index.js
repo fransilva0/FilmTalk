@@ -4,7 +4,7 @@ import axios from 'axios';
 import imgProfile from "../../assets/img-profile.jpg";
 import {SectionFavorite, SectionCards, UserCard, ProfileImage, LinkFollow} from "./style"
 
-export function FavoriteUsers({ hideOnMobile, hideTitleSection, expandHeight, TitleSection }) {
+export function SectionAllUsers({ hideOnMobile, hideBoxShadow, hideTitleSection, expandHeight, TitleSection }) {
 
     const handleScroll = (event) => {
         const element = event.target;
@@ -20,12 +20,12 @@ export function FavoriteUsers({ hideOnMobile, hideTitleSection, expandHeight, Ti
         <SectionFavorite hideOnMobile={hideOnMobile} hideTitleSection={hideTitleSection} TitleSection={TitleSection}>
             <h2>{TitleSection}</h2>
 
-            <SectionCards onScroll={handleScroll} expandHeight={expandHeight} >
+            <SectionCards onScroll={handleScroll} hideBoxShadow={hideBoxShadow} expandHeight={expandHeight} >
                 <UserCard>
                     <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                     <div>
                         <p>username</p>
-                        <LinkFollow>Ver Perfil</LinkFollow>
+                        <LinkFollow>ver perfil</LinkFollow>
                     </div>
                 </UserCard>
 

@@ -183,7 +183,7 @@ export const ButtonIcon = styled.button`
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-text: center;
+    text-align: center;
     cursor: pointer;
 
     div {
