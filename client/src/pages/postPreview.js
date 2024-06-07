@@ -1,316 +1,18 @@
 import React,{ useState, useEffect }  from "react";
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import Modal from 'react-modal';
 import Image from 'next/image';
-import styled from 'styled-components';
 import imgProfile from "../assets/img-profile.jpg";
 import { MainHeader } from "../components/Header";
 import { DefaultButton } from "../components/Button"
 import { ErrorMessage } from "../components/ErrorMessage"
-import { InputPublicationTitle, InputPublicationPost, InputUserForm } from "../components/Input"
+import { InputPublicationTitle, InputPublicationPost } from "../components/Input"
 import { Icon } from '@iconify/react';
+import { ProfileSection, ImageStyle, Section, TitlePost, TitleComments, TextPost, FormSection, InputPost, ButtonSection, PostSettings, 
+    PostPopup, ButtonIcon, Container, CommentSection, Comment, ProfileImage, ProfilePostSection, FooterComment, Spinner } from "../styles/postPreviewStyled"
+import { userEditPublication, userDeletePublication, viewPublication } from "../api/publications";
+import { userCreateComment, userDeleteComment, userEditComment, viewComments } from "../api/comments";
 
-const ProfileSection = styled.section`
-
-display: flex;
-justify-content: space-between;
-align-items: center;
-
-div {
-    margin-right: 0.5rem;
-
-    p {
-        color: #fff;
-        text-align: right;
-    }
-}
-
-
-
-`;
-
-const ImageStyle = styled(Image)`
-
-    border-radius: 5rem;
-
-`;
-
-const Section = styled.section`
-
-    div {
-        padding: 1rem;
-    }
-
-@media (min-width: 1025px) {
-
-    display: flex;
-    justify-content: space-between;
-
-    div {
-        width: 100%;
-        margin: 0.5rem;
-        
-    }
-
-}
-
-`;
-
-const TitlePost = styled.h1`
-
-    border-bottom: 1px solid #535564;
-    color: #535564;
-    padding-bottom: 1rem;
-    font-size: 1.5rem;
-    text-align: center;
-
-`;
-
-const TitleComments = styled.h2`
-
-    border-bottom: 1px solid #535564;
-    color: #535564;
-    padding-bottom: 1rem;
-    font-size: 1rem;
-
-`;
-
-const TextPost = styled.p`
-
-    color: #535564;
-    padding: 1rem 0 1rem 0;
-    width: 90%;
-
-`;
-
-const FormSection = styled.section`
-
-    h2 {
-      color: #535564;
-      margin-bottom: 0.5rem;
-    }
-
-    div {
-        padding: 0;
-    }
-
-`;
-
-
-const InputPost = styled.textarea`
-    color: #535564;
-    border: 2px solid #535564;
-    border-radius: 0.5rem;
-    outline: 0;
-    background: #DFE2E7;
-    margin: 1rem 0 1rem 0;
-    padding: 0.5rem;
-    width: 100%;
-    height: 5rem;
-    resize: none;
-
-    &::placeholder {
-        position: absolute;
-        top: 10px;
-    }
-
-        @media (min-width: 1025px) {
-            width: 55rem;
-        }
-
-`;
-
-const ButtonSection = styled.section`
-
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    width: 100%;
-
-    @media (min-width: 1025px) {
-   
-      justify-content: left;
-      flex-direction: row;
-      
-  }
-`;
-
-
-const PostSettings = styled.div`
-
-    button {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: transform 0.2s;
-
-    &:hover {
-        transform: scale(1.10);
-        }
-    }
-
-`;
-
-const PostPopup = styled.section`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%; 
-    height: 100%; 
-    margin: auto;
-
-    h2 {
-        text-align: center;
-    }
-
-    div {
-        display: flex;
-        justify-content: center;
-    }
-
-    @media (min-width: 370px) and (max-width: 768px) {
-        
-        h2 {
-            font-size: 1rem;
-        }
-
-        div {
-            flex-direction: column;
-        }
-    }
-
-`;
-
-const ButtonIcon = styled.button`
-
-    color: #535564;
-    background: transparent;
-    border: none;
-    margin: 2rem 2rem 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-text: center;
-    cursor: pointer;
-
-    div {
-        width: 100%;
-    }
-
-
-`;
-
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.7rem;
-
-    p {
-        margin: 0.5rem;
-        margin-top: 0;
-    }
-
-    @media (min-width: 1025px) {
-        font-size: 1rem;
-    }
-
-`;
-
-const CommentSection = styled.section`
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-height: 80vh;
-    overflow-x: hidden;
-    padding: 1rem;
-
-    &::-webkit-scrollbar {
-        display: none; 
-    }
-
-    -ms-overflow-style: none;  
-    scrollbar-width: none;
-
-`;
-
-const Comment = styled.div`
-
-background: transparent;
-padding: 1rem;
-display: flex;
-flex-direction: column;
-width: 100%;
-margin-top: 2rem; 
-box-shadow: -3px 3px 4px rgba(0, 0, 0, 0.25);
-
-
-`;
-
-const ProfileImage = styled(Image)`
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    margin-right: 0.5rem;
-`;
-
-const ProfilePostSection = styled.section`
-
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-
-`;
-
-const FooterComment = styled.div`
-
-margin-top: 10px;
-display: flex;
-align-items: center;
-color: #535564;
-font-size: 0.8rem;
-justify-content: left;
-
-p {
-    padding-right: 0.5rem;
-}
-
-button {
-    font-size: 0.8rem;
-    margin: 0;
-    margin-right: 0.5rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-}
-
-`;
-
-const Spinner = styled.span`
-
-width: 48px;
-height: 48px;
-border: 5px solid #DF8271;
-border-bottom-color: transparent;
-border-radius: 50%;
-display: inline-block;
-box-sizing: border-box;
-animation: rotation 1s linear infinite;
-margin: 1rem;
-
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-    } 
-    
-`;
 
 export default function PostPreview() {
     const [title, setTitle] = useState('');
@@ -398,17 +100,7 @@ export default function PostPreview() {
 
       const EditCommentConfirm = () => {
 
-        const editCommentData = editComment
-
-        const userDataJson = {
-            comment: textComment
-          };
-        
-        axios.put(`http://127.0.0.1:8080/comments/${editCommentData.id}`, userDataJson, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          })
+        userEditComment(editComment, textComment, user.token)
           .then(() => {
 
             closeModalComment(false);
@@ -435,16 +127,7 @@ export default function PostPreview() {
 
       const EditConfirm = () => {
 
-        const userDataJson = {
-            title: title,
-            publication: publication
-          };
-        
-        axios.put(`http://127.0.0.1:8080/posts/${UserPost}`, userDataJson, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          })
+        userEditPublication(title, publication, UserPost, access_token)
           .then(() => {
 
             return
@@ -496,11 +179,7 @@ export default function PostPreview() {
       
       const handleConfirm = () => {
         
-        axios.delete(`http://127.0.0.1:8080/posts/${UserPost}`, {
-            headers: {
-              'Authorization': `Bearer ${user.token}`
-            }
-          })
+        userDeletePublication(UserPost, user.token) 
           .then(() => {
 
             closeModal();
@@ -525,11 +204,7 @@ export default function PostPreview() {
 
       const CheckPublications = (access_token) => {
 
-        axios.get(`http://127.0.0.1:8080/posts/${UserPost}`, {
-            headers: {
-              'Authorization': `Bearer ${access_token}`
-            }
-          })
+        viewPublication(UserPost, access_token)
         .then(response => {
 
             setTitle(response.data.requested_data.title)
@@ -559,11 +234,7 @@ export default function PostPreview() {
     const CheckComments = async (accessToken = access_token) => {
 
         setLoading(true);
-        await axios.get(`http://127.0.0.1:8080/comments?post_id=${UserPost}&offset=${offset}`, {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`
-            }
-          })
+        await viewComments(UserPost, offset, accessToken)
         .then(response => {
 
           setTimeout(() => {
@@ -633,16 +304,7 @@ export default function PostPreview() {
 
     const SendComment = () => {
 
-        const userDataJson = {
-            comment: comment,
-            post_id: UserPost
-          };
-      
-          axios.post('http://127.0.0.1:8080/comments', userDataJson, {
-              headers: {
-                'Authorization': `Bearer ${access_token}`
-              }
-            })
+        userCreateComment(comment, UserPost, access_token)
             .then(() => {
 
               setComment('')
@@ -662,13 +324,7 @@ export default function PostPreview() {
 
     const DeleteComment = () => {
 
-        const deleteCommentData = editComment
-
-        axios.delete(`http://127.0.0.1:8080/comments/${deleteCommentData.id}`, {
-              headers: {
-                'Authorization': `Bearer ${access_token}`
-              }
-            })
+        userDeleteComment(editComment, access_token)
             .then(() => {
 
               setListComments([])
