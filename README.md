@@ -34,7 +34,7 @@
 </p>
 
 <p>
-  O design do projeto foi proposto como sendo da seguinte maneira: <a href="https://www.figma.com/file/qr6CObffx3WshklRZJNhxA/MyHO?type=design&node-id=0%3A1&mode=design&t=KPYvb7nQ9y6afTWW-1">Design no Figma</a>, tendo como prioridade de desenvolvimento o mobile first com ajustes de responsividade para telas maiores após a conclusão das funcionalidades iniciais.
+  O projeto teve como prioridade de desenvolvimento o mobile first com ajustes de responsividade para telas maiores após a conclusão das funcionalidades iniciais.
 </p>
 
 ### Recursos Principais:
@@ -51,9 +51,13 @@
 
 ## :sparkles: Planejamento ##
 
-- [ ] Sistema de Registro/login funcional;<br />
-- [ ] Página inicial de postagens do forum;<br />
-- [ ] Página de usuário para criação e visualização de suas postagens;<br />
+- [X] Sistema de Registro/login funcional;<br />
+- [X] Página inicial de postagens do forum;<br />
+- [X] Página de usuário para criar, visualizar, editar e deletar suas postagens;<br />
+- [X] Página de usuário para visualizar e comentar postagens da comunidade;<br/>
+- [ ] Usuário pode acessar perfil de outros usuários e visualizar suas postagens;<br/>
+- [ ] Usuário pode seguir outros usuários através do perfil dos mesmos;<br/>
+- [ ] Usuário pode enviar mensagens para outros usuários através de um chat;<br/>
 
 ## :memo: Licença ##
 
