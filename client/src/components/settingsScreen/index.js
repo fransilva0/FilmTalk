@@ -159,8 +159,12 @@ export function SettingsScreen ({setScreen}) {
         }
     }, []);
 
-
-
+    function isBigScreen() {
+      if (typeof window !== 'undefined') {
+          return window.innerWidth > 1024;
+      }
+      return false;
+  }
 
     return (
       <ConfigContainer>
@@ -171,11 +175,11 @@ export function SettingsScreen ({setScreen}) {
                         backgroundColor: 'rgba(0, 0, 0, 0.9)'
                     },
                     content: {
-                        width: '80%', 
-                        height: '80%', 
+                        width: isBigScreen() ? '30%' : '80%', 
+                        height: '30%', 
                         margin: 'auto',
-                        backgroundColor: '#181818', 
-                        color: '#fff',
+                        backgroundColor: '#fff', 
+                        color: '#000',
                         border: 'none'
                     
                     }
@@ -190,7 +194,7 @@ export function SettingsScreen ({setScreen}) {
                     <div>
                         <ButtonIcon onClick={handleConfirm}>
                             <div>
-                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#02D12B', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
                             <div>
                                 Confirmar
@@ -198,7 +202,7 @@ export function SettingsScreen ({setScreen}) {
                         </ButtonIcon>
                         <ButtonIcon onClick={closeModal}>
                             <div>
-                                <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                <Icon icon="ic:twotone-cancel" style={{ color: '#B84032', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
                             <div>
                                 Cancelar

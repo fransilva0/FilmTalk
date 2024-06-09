@@ -342,6 +342,14 @@ export default function PostPreview() {
         
     }
 
+    function isBigScreen() {
+        if (typeof window !== 'undefined') {
+            return window.innerWidth > 1024;
+        }
+        return false;
+    }
+
+
       
     if (title) {
     return (
@@ -363,11 +371,11 @@ export default function PostPreview() {
                         backgroundColor: 'rgba(0, 0, 0, 0.9)'
                     },
                     content: {
-                        width: '80%', 
-                        height: '80%', 
+                        width: isBigScreen() ? '30%' : '80%', 
+                        height: '30%', 
                         margin: 'auto',
-                        backgroundColor: '#181818', 
-                        color: '#fff',
+                        backgroundColor: '#fff', 
+                        color: '#000',
                         border: 'none'
                     
                     }
@@ -378,7 +386,7 @@ export default function PostPreview() {
                     <div>
                         <ButtonIcon onClick={handleConfirm}>
                             <div>
-                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#02D12B', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
                             <div>
                                 Confirmar
@@ -386,7 +394,7 @@ export default function PostPreview() {
                         </ButtonIcon>
                         <ButtonIcon onClick={closeModal}>
                             <div>
-                                <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                <Icon icon="ic:twotone-cancel" style={{ color: '#B84032', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
                             <div>
                                 Cancelar
@@ -400,7 +408,7 @@ export default function PostPreview() {
                     <div>
                         <ButtonIcon onClick={DeleteComment}>
                             <div>
-                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#02D12B', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
                             <div>
                                 Confirmar
@@ -408,7 +416,7 @@ export default function PostPreview() {
                         </ButtonIcon>
                         <ButtonIcon onClick={closeModal}>
                             <div>
-                                <Icon icon="ic:twotone-cancel" style={{ color: '#fff', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                <Icon icon="ic:twotone-cancel" style={{ color: '#B84032', fontSize: '2rem', margin: "0", padding: "0" }} />
                             </div>
                             <div>
                                 Cancelar
@@ -427,8 +435,8 @@ export default function PostPreview() {
                         backgroundColor: 'rgba(0, 0, 0, 0.9)'
                     },
                     content: {
-                        width: '80%', 
-                        height: '80%', 
+                        width: isBigScreen() ? '50%' : '80%', 
+                        height: '50%', 
                         margin: 'auto',
                         backgroundColor: '#fff', 
                         color: '#fff',
@@ -468,7 +476,7 @@ export default function PostPreview() {
                                 <ButtonSection>
                                     <ButtonIcon type="submit" onClick={CheckEmptyEntry}>
                                         <div>
-                                            <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                            <Icon icon="line-md:circle-to-confirm-circle-twotone-transition" style={{ color: '#02D12B', fontSize: '2rem', margin: "0", padding: "0" }} />
                                         </div>
                                         <div>
                                             Confirmar
@@ -476,7 +484,7 @@ export default function PostPreview() {
                                     </ButtonIcon>
                                     <ButtonIcon onClick={() => {EditCanceled()}}>
                                         <div>
-                                            <Icon icon="ic:twotone-cancel" style={{ color: '#535564', fontSize: '2rem', margin: "0", padding: "0" }} />
+                                            <Icon icon="ic:twotone-cancel" style={{ color: '#B84032', fontSize: '2rem', margin: "0", padding: "0" }} />
                                         </div>
                                         <div>
                                             Cancelar

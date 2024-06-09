@@ -1,6 +1,6 @@
 import React,{ useState, useEffect }  from "react";
 import axios from 'axios';
-import imgProfile from "../../assets/img-profile.jpg";
+import imgMovie from "../../assets/example-movie.jpg";
 import {MovieSection, SectionCards, MovieCard, MovieImage} from "./style"
 
 export function MovieListsSection({ hideOnMobile, hideBoxShadow, hideTitleSection, expandHeight, TitleSection }) {
@@ -21,43 +21,43 @@ export function MovieListsSection({ hideOnMobile, hideBoxShadow, hideTitleSectio
 
             <SectionCards onScroll={handleScroll} expandHeight={expandHeight} >
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
 
                 <MovieCard>
-                    <MovieImage src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
+                    <MovieImage src={imgMovie} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                 </MovieCard>
             </SectionCards>
 
