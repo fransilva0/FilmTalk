@@ -4,9 +4,9 @@ name: FilmTalk
 
 on:
   push:
-    branches: [ "Develop" ]
+    branches: [ "Main" ]
   pull_request:
-    branches: [ "Develop" ]
+    branches: [ "Main" ]
 
 
 jobs:

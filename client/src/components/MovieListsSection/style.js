@@ -32,6 +32,7 @@ export const SectionCards = styled.div`
 
     overflow-x: hidden;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     overflow: auto;
     margin-top: 1rem;
@@ -67,7 +68,7 @@ export const MovieCard = styled.section`
 `;
 
 export const MovieImage = styled(Image)`
-    width: 100px;
-    height: 100px;
+    width: auto;
+    height: auto;
     margin-right: 0.5rem;
 `;
