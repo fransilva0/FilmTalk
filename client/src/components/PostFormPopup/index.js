@@ -54,23 +54,29 @@ export function PostFormPopup ({ isOpen, onRequestClose }) {
         }
       }, []);
 
+      function isBigScreen() {
+        if (typeof window !== 'undefined') {
+            return window.innerWidth > 1024;
+        }
+        return false;
+    }
+
 
     return (
         <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="confirmação" 
                 style={{
-                    overlay: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.9)'
-                    },
-                    content: {
-                      width: '80%', 
-                      height: '80%', 
-                      margin: 'auto',
-                      backgroundColor: '#fff', 
-                      color: '#fff',
-                      border: 'none'
-                    
-                    }
-            }}>
+                  overlay: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)'
+                },
+                content: {
+                  width: isBigScreen() ? '50%' : '80%', 
+                  height: '50%', 
+                  margin: 'auto',
+                  backgroundColor: '#fff', 
+                  color: '#fff',
+                  border: 'none',
+                }
+                }}>
 
                 <PostPopup>
                   <FormSection>
