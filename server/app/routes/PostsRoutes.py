@@ -89,7 +89,7 @@ def publication_methods(current_user,post_id):
     if not post_id.isnumeric():
         return make_response(error_response(action="/Post/ID",error_message="Parameter ID must be a number",error_code=400))
     post_id = int(post_id)
-
+#fazer esse get separado dos demais ele não necessita está logado para acessar
     if request.method == "GET":
         try:
             publication = postsService.find_publication_by_id(post_id)
