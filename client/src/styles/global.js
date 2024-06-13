@@ -14,5 +14,9 @@ const GlobalStyle = createGlobalStyle`
     background: #DFE2E7;
   }
 
+  a {
+    text-decoration: none;
+  }
+
 `;
 export default GlobalStyle;

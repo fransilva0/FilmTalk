@@ -41,6 +41,15 @@ export const GeneralContainer = styled.div`
 
 `;
 
+export const SectionProfile = styled.div`
+
+    @media (min-width: 1025px) {
+        width: 60%;
+    }
+
+
+`;
+
 export const VisualizationContainer = styled(Container)`
 
     @media (min-width: 1025px) {

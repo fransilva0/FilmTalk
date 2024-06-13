@@ -3,12 +3,13 @@ import { useRouter } from 'next/router';
 import { MainHeader } from "../components/Header"
 import { DefaultButton } from "../components/Button"
 import { ImageStyle, Container, CentralLine, Button, StyledIconButton, NavbarContainer, NavbarButton, 
-    VisualizationContainer, PublicationsSection, CommentSection, Spinner, Publication, GeneralContainer, ButtonSection } from "../styles/profileStyled"
+    VisualizationContainer, PublicationsSection, CommentSection, Spinner, Publication, GeneralContainer, ButtonSection, SectionProfile } from "../styles/profileStyled"
 import { FavoriteUsers } from "../components/FavoriteUsers"
 import { MovieListsSection } from "../components/MovieListsSection"
 import { ErrorMessage } from "../components/ErrorMessage"
 import imgProfile from "../assets/img-profile.jpg"
 import { checkPostsFeed } from "../api/feeds";
+import { userProfile } from "../api/user"
 import { PostFormPopup } from "../components/PostFormPopup";
 
 
@@ -22,12 +23,15 @@ export default function Profile() {
     const [configPagination, setConfigPagination] = useState([]);
     const [offset, setOffset] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [listUserProfile, setListUserProfile] = useState([])
 
     const handleClick = (buttonName) => {
         setActiveButton(buttonName);
     }
 
     const router = useRouter();
+
+    const { User } = router.query
 
     useEffect(() => {
       if (offset === 1) {
@@ -46,6 +50,16 @@ export default function Profile() {
 
       CheckPublications(foundUser.token);
 
+      if (User) {
+
+        userProfileData(User)
+
+      } else {
+
+        userProfileData(foundUser.username)
+
+      }
+
       setUser(foundUser);
 
     } else {
@@ -54,6 +68,13 @@ export default function Profile() {
         
       }
   }, []);
+
+  const userProfileData = (username) => {
+    userProfile(username)
+    .then(response => {
+        setListUserProfile(response.data.requested_data)
+    }) 
+  }
 
 
 
@@ -138,27 +159,37 @@ export default function Profile() {
                 <MovieListsSection hideOnMobile={true} TitleSection={"Biografia Cinematográfica"} />
             </div>
 
-            <div>
+            <SectionProfile>
             <Container>
                 <ImageStyle src={imgProfile} alt="image by Carter Baran, via Unsplash" />
-                <h1>Username</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent laoreet venenatis feugiat. Maecenas eget placerat arcu, sit amet maximus nunc.</p>
+                <h1>{listUserProfile.username}</h1>
+                <p>{listUserProfile.user_bio ? listUserProfile.user_bio : " "}</p>
             </Container>
 
             <CentralLine />
 
-            <Container>
-                <Button onClick={() => { router.push('/home'); }}>
+            {listUserProfile.user_link ? (<Container>
+                <a href={listUserProfile.user_link} target="_blank" rel="noopener noreferrer">
+                    <Button>
+                        <StyledIconButton icon="iconoir:internet" />
+                        <p>{listUserProfile.user_link}</p>
+                    </Button>
+                </a>
+            </Container>) : (
+                <Container>
                     <StyledIconButton icon="iconoir:internet" />
-                    <p>google.com</p>
-                </Button>
-            </Container>
+                </Container>
+            )}
 
             <PostFormPopup isOpen={modalIsOpen} onRequestClose={closeModal} />
 
-            <ButtonSection>
+            { listUserProfile.username === JSON.parse(localStorage.getItem("user")).username ? (<ButtonSection>
                 <DefaultButton type="submit" onClick={openModal} text="Crie uma Publicação" />
-            </ButtonSection>
+            </ButtonSection>) : (
+                <ButtonSection>
+                    <DefaultButton type="submit" text="Favoritar Usuário" />
+                </ButtonSection>
+            )}
 
             <VisualizationContainer>
 
@@ -209,7 +240,7 @@ export default function Profile() {
 
             </VisualizationContainer>
 
-            </div>
+            </SectionProfile>
 
             </GeneralContainer>
 

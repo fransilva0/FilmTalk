@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Modal from 'react-modal';
 import { Icon } from '@iconify/react';
 import axios from 'axios';
-import { modifyUserData } from "../../api/user";
+import { modifyUserData, modifyUserProfileData, viewDataProfileConfig } from "../../api/user";
 import { DefaultButton } from "../Button"
 import { InputUserForm } from "../Input"
 import { ErrorMessage } from "../ErrorMessage"
@@ -17,6 +17,8 @@ export function SettingsScreen ({setScreen}) {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [user, setUser] = useState();
+    const [useBio, setUseBio] = useState('');
+    const [useLink, setUseLink] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [confirmAction, setConfirmAction] = useState(null);
 
@@ -97,6 +99,19 @@ export function SettingsScreen ({setScreen}) {
           }
         });
     }
+
+    const UpdateUserProfileData = (field, value) => {
+      
+      modifyUserProfileData(field, value, user.token)
+        .then(() => {
+
+        })
+        .catch((error) => {
+          if ((error.response)) {
+            setMessage(error.response.data.error_message)
+          }
+        });
+    }
   
   
     const CheckUsername= () => {
@@ -151,6 +166,16 @@ export function SettingsScreen ({setScreen}) {
         const foundUser = JSON.parse(loggedInUser);
 
         setUser(foundUser);
+
+        viewDataProfileConfig(foundUser.token)
+        .then((response) => {
+          setUseBio(response.data.requested_data.user_bio)
+          setUseLink(response.data.requested_data.user_link)
+
+        })
+        .catch((error) => {
+          
+        });
 
       } else {
           
@@ -302,11 +327,11 @@ export function SettingsScreen ({setScreen}) {
           <FormSection>
               {!bioEditing && 
                 <>
-                  <p>Status de perfil atual: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent laoreet venenatis feugiat. Maecenas eget placerat arcu, sit amet maximus nunc.</p>
+                  <p>Status de perfil atual: {useBio ? useBio : "sem biografia"}</p>
                   
                   <ButtonSection>
                 
-                    <DefaultButton type="button" onClick={() => {setBioEditing(!bioEditing); setMessage(''); }} text="Editar" />
+                    <DefaultButton type="button" onClick={() => {setBioEditing(!bioEditing); setMessage(''); setLinkEditing(false)}} text="Editar" />
                 
                   </ButtonSection>
               </>
@@ -314,9 +339,9 @@ export function SettingsScreen ({setScreen}) {
               
               {bioEditing && (
                 <div>
-                  <InputUserForm placeholder={user && user.username} type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                  <InputUserForm placeholder="Escreva uma bio" type="text" value={useBio} onChange={(e) => setUseBio(e.target.value)} />
                   <ButtonSection>
-                    <DefaultButton type="submit" onClick={CheckUsername} text="Salvar" />
+                    <DefaultButton type="submit" onClick={() => {setConfirmAction(() => () => UpdateUserProfileData("bio", useBio)); openModal()}} text="Salvar" />
                     <DefaultButton type="button" onClick={() => {setBioEditing(!bioEditing); setMessage('')}} text="Cancelar" />
                   </ButtonSection>
                   <Container> { message && <ErrorMessage>{message}</ErrorMessage>} </Container>
@@ -328,11 +353,11 @@ export function SettingsScreen ({setScreen}) {
           <FormSection>
               {!linkEditing && 
                 <>
-                  <p>link: https://www.google.com</p>
+                  <p>link: {useLink ? useLink : "sem link"}</p>
                   
                   <ButtonSection>
                 
-                    <DefaultButton type="button" onClick={() => {setLinkEditing(!linkEditing); setMessage(''); }} text="Editar" />
+                    <DefaultButton type="button" onClick={() => {setLinkEditing(!linkEditing); setMessage(''); setBioEditing(false)}} text="Editar" />
                 
                   </ButtonSection>
               </>
@@ -340,9 +365,9 @@ export function SettingsScreen ({setScreen}) {
               
               {linkEditing && (
                 <div>
-                  <InputUserForm placeholder={user && user.username} type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                  <InputUserForm placeholder="https://www.example.com" type="text" value={useLink} onChange={(e) => setUseLink(e.target.value)} />
                   <ButtonSection>
-                    <DefaultButton type="submit" onClick={CheckUsername} text="Salvar" />
+                    <DefaultButton type="submit" onClick={() => {setConfirmAction(() => () => UpdateUserProfileData("link", useLink)); openModal()}} text="Salvar" />
                     <DefaultButton type="button" onClick={() => {setLinkEditing(!linkEditing); setMessage('')}} text="Cancelar" />
                   </ButtonSection>
                   <Container> { message && <ErrorMessage>{message}</ErrorMessage>} </Container>
