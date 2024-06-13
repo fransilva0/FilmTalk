@@ -24,6 +24,11 @@ class PostsRepository(BaseRepository):
         posts = db.session.execute(stmt).fetchmany()
         return posts
     
+    def get_all_by_username(self,username):
+        stmt = db.select(Posts.id,Posts.title,Posts.publication,User.username,Posts.time_created,Posts.time_updated).join(User.posts).where(User.username==username).order_by(Posts.time_created.desc())
+        posts = db.session.execute(stmt).fetchmany()
+        return posts
+    
     def get_all_ordered_by_time_created(self):
         stmt = db.select(Posts.id,Posts.title,Posts.publication,User.username,Posts.time_created,Posts.time_updated).join(User.posts).order_by(Posts.time_created.desc())
         posts = db.session.execute(stmt).fetchmany()

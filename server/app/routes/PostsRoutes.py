@@ -80,6 +80,31 @@ def find_and_page_publications():
                 return make_response(error_response(action="Get All Users Posts Page",error_message=str(err),error_code=500))
     else:                                                                          
         return make_response(error_response(action="/posts/page",error_message="Bad Request",error_code=400))
+    
+@posts_bp.route("/<username>/page",methods=["GET"])
+def find_user_publications_page(username):
+    if request.method == "GET":
+        if "limit" in request.args and not request.args.get('limit').isnumeric():
+            return make_response(error_response(action="Get All User Posts Page",error_message="limit must be a number",error_code=400))
+        limit = request.args.get('limit', type=int, default=10) 
+        if "offset" in request.args and not request.args.get('offset').isnumeric():
+            return make_response(error_response(action="Get All User Posts Page",error_message="offset must be a number",error_code=400))
+        offset = request.args.get('offset', type=int, default=1)     
+        if limit < 1:
+            return make_response(error_response(action="Get All User Posts Page",error_message="limit cannot be less than one",error_code=400))
+        if offset < 1:
+            return make_response(error_response(action="Get All User Posts Page",error_message="offset cannot be less than one",error_code=400))
+        try:
+            request_data = postsService.find_Publications_page_by_username(limit=limit,offset=offset,username=username)
+            return make_response(success_response(action="Get All User Posts Page",parameter=request_data))
+        except Exception as err:
+            if len(err.args) == 2:
+                return make_response(error_response(action="Get All User Posts Page",error_message=err.args[0],error_code=err.args[1]))
+            else:
+                return make_response(error_response(action="Get All User Posts Page",error_message=str(err),error_code=500))
+    else:                                                                          
+        return make_response(error_response(action="/posts/page",error_message="Bad Request",error_code=400))
+
 
 
 

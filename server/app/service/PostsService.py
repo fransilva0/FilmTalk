@@ -56,6 +56,16 @@ class PostsService:
         }
         return response
 
+    def find_Publications_page_by_username(self,username,offset,limit):
+        posts = postsRepository.get_all_by_username(username=username)
+        posts_dict = convert_rows_object_to_dict(posts)
+        page,pagination = paginate(offset=offset,limit=limit,list=posts_dict)
+        response = {
+            "data":page,
+            "pagination":pagination
+        }
+        return response
+    
     def find_publications_page(self,offset,limit):
         posts = postsRepository.get_all_ordered_by_time_created()
         posts_dict = convert_rows_object_to_dict(posts)
