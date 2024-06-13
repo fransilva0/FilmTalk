@@ -197,3 +197,13 @@ export const NavbarButton = styled.button`
   font-size: 16px;
   padding: 10px;
 `;
+
+export const UserTitleCard = styled.button`
+
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+
+`;
