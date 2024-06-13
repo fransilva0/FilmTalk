@@ -61,3 +61,7 @@ export const modifyUserProfileData = (field, value, access_token) => {
 export const userProfile = (username) => {
   return api.get(`/users/${username}/profile`)
 }
+
+export const userProfileViewPosts = (username, offset) => {
+  return api.get(`/posts/${username}/page?offset=${offset}`)
+}

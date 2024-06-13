@@ -9,7 +9,7 @@ import { MovieListsSection } from "../components/MovieListsSection"
 import { ErrorMessage } from "../components/ErrorMessage"
 import imgProfile from "../assets/img-profile.jpg"
 import { checkPostsFeed } from "../api/feeds";
-import { userProfile } from "../api/user"
+import { userProfile, userProfileViewPosts } from "../api/user"
 import { PostFormPopup } from "../components/PostFormPopup";
 
 
@@ -35,7 +35,7 @@ export default function Profile() {
 
     useEffect(() => {
       if (offset === 1) {
-          CheckPublications();
+          CheckPublications(User);
       }
       
   }, [offset]);
@@ -48,15 +48,17 @@ export default function Profile() {
 
       const foundUser = JSON.parse(loggedInUser);
 
-      CheckPublications(foundUser.token);
+     
 
       if (User) {
 
         userProfileData(User)
+        CheckPublications(User);
 
       } else {
 
         userProfileData(foundUser.username)
+        CheckPublications(foundUser.username);
 
       }
 
@@ -78,10 +80,10 @@ export default function Profile() {
 
 
 
-    const CheckPublications = async (access_token) => {
+    const CheckPublications = async (username) => {
 
         setLoading(true);
-        await checkPostsFeed(offset, access_token)
+        await userProfileViewPosts(username, offset)
         .then(response => {
 
           setTimeout(() => {
@@ -105,7 +107,7 @@ export default function Profile() {
         if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
             if(offset != null) {
 
-                CheckPublications(user.token)
+                CheckPublications(User);
 
             }
         }
@@ -123,7 +125,8 @@ export default function Profile() {
       const element = event.target;
       if (element.scrollHeight - element.scrollTop === element.clientHeight) {
           if(offset != null) {
-              CheckPublications(user.token)
+
+        CheckPublications(User);
           }
       }
   };

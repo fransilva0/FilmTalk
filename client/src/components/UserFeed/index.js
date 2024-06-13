@@ -6,7 +6,7 @@ import Image from 'next/image';
 import imgProfile from "../../assets/img-profile.jpg";
 import { SectionAllUsers } from "../SectionAllUsers";
 import { Container, GeneralContainer, ProfileSection, StyledIcon, Button, PublicationsSection, Publication, ProfileImage, 
-    ProfilePostSection, CommentSection, Spinner, StyleIcon, NavbarContainer, NavbarButton} from "./style"
+    ProfilePostSection, CommentSection, Spinner, StyleIcon, NavbarContainer, NavbarButton, UserTitleCard} from "./style"
 import { PostFormPopup } from "../PostFormPopup";
 
 
@@ -106,9 +106,9 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
 
                     <Image src={imgProfile} alt="image by Carter Baran, via Unsplash" width="100" height="100" />
                     <div>
-                        <Link href="/profile" style={{ textDecoration: 'none' }}>
-                            <p>{userProp && userProp.username}</p>
-                        </Link>
+                        <UserTitleCard onClick={() => {
+                            router.push(`/profile?User=${userProp && userProp.username}`)
+                          }}>{userProp && userProp.username}</UserTitleCard>
                         <Button onClick={openModal}>
                             <StyledIcon icon="tabler:edit" />
                             <p>Criar uma Publicação</p>
