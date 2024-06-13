@@ -8,7 +8,7 @@ import jwt
 user_bp = Blueprint('users_api',__name__,url_prefix='/users')
 userService = UserService()
 
-@user_bp.route("",methods=["GET","POST"])
+@user_bp.route("",methods=["POST"])
 def register():
     if request.method == "POST":
         if request.is_json:
@@ -33,7 +33,10 @@ def register():
                     else:
                         return make_response(error_response(action="Register",error_message=str(err),error_code=500))
         else:                                                                            
-            return make_response(error_response(action="Register",error_message="missing request body",error_code=400))                                                    
+            return make_response(error_response(action="Register",error_message="missing request body",error_code=400))                                              
+
+@user_bp.route("",methods=["GET"])
+
 
 @user_bp.route("",methods=["PATCH"])
 @token_required
@@ -107,4 +110,60 @@ def login():
                     return error_response(action="Authenticate",error_code=500,error_message=err.args)
         else:
             return error_response(action="Authenticate",error_code=400,error_message="missing request body")
+        
+#GET/PUT /user/profile
+#(read/update *your* profile)
 
+@user_bp.route("/profile", methods=["GET","PUT"])
+@token_required
+def profile_methods(current_user):
+    if request.method == "GET":
+        try:
+            user_profile = userService.find_user_profile_by_id(id=current_user.id)
+            return make_response(success_response(action="Get Profile",parameter=user_profile))
+        except Exception as err:
+            if len(err.args) == 2:
+                return make_response(error_response(action="Get Profile",error_message=err.args[0],error_code=err.args[1]))
+            else:
+                return make_response(error_response(action="Get Profile",error_message=str(err),error_code=500))
+    elif request.method == "PUT":
+        if request.is_json:
+            data = request.get_json()
+            if len(data) < 1:
+                return make_response(error_response(action="Update Profile",error_code=400,error_message="missing one or more parameters"))
+            elif "bio" in data:
+                try:
+                    bio = data.get("bio")
+                    userService.update_bio(user_id=current_user.id,bio=bio)
+                    return make_response(success_response(action="Update Bio"))
+                except Exception as err:
+                    if len(err.args) == 2:
+                        return make_response(error_response(action="Update Bio",error_message=err.args[0],error_code=err.args[1]))
+                    else:
+                        return make_response(error_response(action="Update Bio",error_message=str(err),error_code=500))
+            elif "link" in data:
+                try:
+                    link = data.get("link")
+                    userService.update_link(user_id=current_user.id,link=link)
+                    return make_response(success_response(action="Update Link"))
+                except Exception as err:
+                    if len(err.args) == 2:
+                        return make_response(error_response(action="Update Link",error_message=err.args[0],error_code=err.args[1]))
+                    else:
+                        return make_response(error_response(action="Update Link",error_message=str(err),error_code=500))
+            else:
+                return make_response(error_response(action="Update Profile",error_code=400,error_message="request body must contains 'link' or 'bio'"))
+        else:
+            return error_response(action="Update Profile",error_code=400,error_message="missing request body")
+        
+@user_bp.route("/<username>/profile", methods=["GET"])
+def find_profile(username):
+    if request.method == "GET":
+        try:
+            user_profile = userService.find_user_profile_by_username(username=username)
+            return make_response(success_response(action="Get User Profile",parameter=user_profile))
+        except Exception as err:
+            if len(err.args) == 2:
+                return make_response(error_response(action="Get User Profile",error_message=err.args[0],error_code=err.args[1]))
+            else:
+                return make_response(error_response(action="Get User Profile",error_message=str(err),error_code=500))
