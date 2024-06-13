@@ -35,3 +35,29 @@ export const modifyUserData = (field, value, access_token) => {
   })
 
 }
+
+export const viewDataProfileConfig = (access_token) => {
+  return api.get('/users/profile', {
+    headers: {
+      'Authorization': `Bearer ${access_token}`
+    }
+  })
+}
+
+export const modifyUserProfileData = (field, value, access_token) => {
+  
+  const userDataJson = {
+    [field]: value
+  };
+
+  return api.put('/users/profile', userDataJson, {
+    headers: {
+      'Authorization': `Bearer ${access_token}`
+    }
+  })
+}
+
+
+export const userProfile = (username) => {
+  return api.get(`/users/${username}/profile`)
+}

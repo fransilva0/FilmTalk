@@ -146,7 +146,9 @@ export function UserFeed ({ userProp, setUserProp, setScreen }) {
 
                     <ProfilePostSection>
                         <ProfileImage src={imgProfile} alt="image by Carter Baran, via Unsplash" />
-                        <p>{publication.username}</p>
+                        <button onClick={() => {
+                            router.push(`/profile?User=${publication.username}`)
+                          }}>{publication.username}</button>
                     </ProfilePostSection>
 
 
