@@ -8,6 +8,8 @@ class User(db.Model):
     username = db.Column(db.String(30), unique=True , nullable=False)
     email = db.Column(db.String(30), unique=True , nullable=False)
     password = db.Column(db.String , nullable=False)
+    link = db.Column(db.String)
+    bio = db.Column(db.String)
 
     posts = db.relationship('Posts', back_populates='user')
     comments = db.relationship('Comments', back_populates='user')
@@ -16,3 +18,5 @@ class User(db.Model):
         self.username = username
         self.email = email
         self.password = password
+        self.bio = None
+        self.link = None
