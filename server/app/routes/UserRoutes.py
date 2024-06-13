@@ -33,10 +33,7 @@ def register():
                     else:
                         return make_response(error_response(action="Register",error_message=str(err),error_code=500))
         else:                                                                            
-            return make_response(error_response(action="Register",error_message="missing request body",error_code=400))                                              
-
-@user_bp.route("",methods=["GET"])
-
+            return make_response(error_response(action="Register",error_message="missing request body",error_code=400))                                             
 
 @user_bp.route("",methods=["PATCH"])
 @token_required
@@ -111,8 +108,6 @@ def login():
         else:
             return error_response(action="Authenticate",error_code=400,error_message="missing request body")
         
-#GET/PUT /user/profile
-#(read/update *your* profile)
 
 @user_bp.route("/profile", methods=["GET","PUT"])
 @token_required

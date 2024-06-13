@@ -13,7 +13,6 @@ class User(db.Model):
 
     posts = db.relationship('Posts', back_populates='user')
     comments = db.relationship('Comments', back_populates='user')
-    #connections = db.relationship('Connections', back_populates='user')
 
     def __init__(self,username,email,password):
         self.username = username
