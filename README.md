@@ -1,9 +1,9 @@
-<!--<div align='center' id='top'>
+<div align='center' id='top'>
 <img src='./.github/design.png' alt='FilmTalk, design' />
 
 &#xa0;
 
-</div>-->
+</div>
 
 <h1 align='center'>FilmTalk</h1>
 
